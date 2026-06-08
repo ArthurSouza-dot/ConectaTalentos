@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConectaTalentos — Sua primeira oportunidade começa aqui</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #07070d;
+      --surface: #0f0f1a;
+      --surface2: #171726;
+      --border: #22223a;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --green: #22d3a5;
+      --yellow: #fbbf24;
+      --red: #ff5f7e;
+      --text: #eeeef8;
+      --muted: #6868a0;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ── GLOWS ── */
+    .glow-purple {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .glow-green {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,211,165,0.13) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 68px;
+      background: rgba(7,7,13,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo {
+      font-family: var(--font-display); font-weight: 800; font-size: 1.25rem;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.88rem;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-ctas { display: flex; gap: 10px; }
+    .btn-nav-outline {
+      padding: 8px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: 500;
+      background: transparent; color: var(--text); border: 1px solid var(--border);
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-nav-outline:hover { background: var(--surface2); }
+    .btn-nav-solid {
+      padding: 8px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: 700;
+      background: var(--accent); color: #fff; border: none;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-nav-solid:hover { background: #7c74ff; box-shadow: 0 4px 20px rgba(108,99,255,0.4); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      overflow: hidden;
+    }
+    .hero .glow-purple { width: 700px; height: 700px; top: -150px; left: 50%; transform: translateX(-50%); }
+    .hero .glow-green  { width: 400px; height: 400px; bottom: -50px; right: -100px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
+      padding: 6px 16px; border-radius: 30px;
+      font-size: 0.8rem; font-weight: 600; color: var(--accent2);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(1.4); } }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      max-width: 900px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted); max-width: 600px;
+      line-height: 1.7; margin-bottom: 3rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-hero-primary {
+      padding: 14px 32px; border-radius: 12px;
+      background: var(--accent); color: #fff;
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-hero-primary:hover { background: #7c74ff; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,0.45); }
+    .btn-hero-secondary {
+      padding: 14px 32px; border-radius: 12px;
+      background: rgba(34,211,165,0.1); color: var(--green);
+      border: 1px solid rgba(34,211,165,0.3);
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-hero-secondary:hover { background: rgba(34,211,165,0.2); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 4rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent2), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--muted); font-size: 0.75rem;
+      animation: fadeUp 0.6s 0.8s ease both;
+    }
+    .scroll-arrow { width: 20px; height: 20px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); animation: scrollBounce 1.5s infinite; }
+    @keyframes scrollBounce { 0%,100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(4px); } }
+
+    /* ── SECTIONS COMMON ── */
+    section { position: relative; padding: 100px 5%; overflow: hidden; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent2);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
+
+    /* ── DIVIDER LINE ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 5%;
+    }
+
+    /* ── FOR WHO SECTION ── */
+    .forwho { background: var(--surface); }
+    .forwho-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+      margin-top: 4rem; border-radius: 24px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .forwho-card {
+      padding: 3rem;
+      position: relative; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .forwho-card:first-child { background: rgba(108,99,255,0.06); border-right: 1px solid var(--border); }
+    .forwho-card:last-child { background: rgba(34,211,165,0.05); }
+    .forwho-card:hover { background: rgba(108,99,255,0.12); }
+    .forwho-card:last-child:hover { background: rgba(34,211,165,0.1); }
+    .forwho-icon { font-size: 3rem; margin-bottom: 1.2rem; display: block; }
+    .forwho-title { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin-bottom: 0.8rem; }
+    .forwho-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .forwho-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+    .forwho-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+    .forwho-list li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .btn-forwho {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px;
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+      text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
+    }
+    .btn-candidate { background: var(--accent); color: #fff; }
+    .btn-candidate:hover { background: #7c74ff; box-shadow: 0 6px 24px rgba(108,99,255,0.4); transform: translateY(-1px); }
+    .btn-company { background: var(--green); color: #07070d; }
+    .btn-company:hover { background: #2ee8b5; box-shadow: 0 6px 24px rgba(34,211,165,0.4); transform: translateY(-1px); }
+
+    /* ── FEATURES ── */
+    .features-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 4rem; }
+    .features-header .section-sub { text-align: center; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem;
+      transition: all 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; inset: 0; opacity: 0;
+      background: linear-gradient(135deg, rgba(108,99,255,0.08), transparent);
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem;
+    }
+    .fi-purple { background: rgba(108,99,255,0.15); }
+    .fi-green  { background: rgba(34,211,165,0.15); }
+    .fi-yellow { background: rgba(251,191,36,0.15); }
+    .feature-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .feature-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .howitworks { background: var(--surface); }
+    .howitworks-header { text-align: center; margin-bottom: 5rem; }
+    .howitworks-header .section-sub { margin: 0 auto; text-align: center; }
+    .steps-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .steps-group-title {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;
+    }
+    .steps-group-title .pill {
+      padding: 4px 12px; border-radius: 20px; font-size: 0.78rem;
+    }
+    .pill-purple { background: rgba(108,99,255,0.15); color: var(--accent2); }
+    .pill-green  { background: rgba(34,211,165,0.15); color: var(--green); }
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex; gap: 1.2rem;
+      position: relative; padding-bottom: 2rem;
+    }
+    .step:last-child { padding-bottom: 0; }
+    .step-line {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .step-num {
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.85rem; font-weight: 800;
+      z-index: 1;
+    }
+    .sn-purple { background: rgba(108,99,255,0.2); color: var(--accent2); border: 2px solid rgba(108,99,255,0.3); }
+    .sn-green  { background: rgba(34,211,165,0.2); color: var(--green); border: 2px solid rgba(34,211,165,0.3); }
+    .step-connector {
+      width: 2px; flex: 1; margin-top: 6px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+    }
+    .step-content { padding-top: 6px; }
+    .step-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .step-desc { color: var(--muted); font-size: 0.87rem; line-height: 1.6; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-header { text-align: center; margin-bottom: 4rem; }
+    .testimonials-header .section-sub { margin: 0 auto; text-align: center; }
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .testi-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.8rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: all 0.25s;
+    }
+    .testi-card:hover { border-color: var(--border); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .testi-stars { color: var(--yellow); font-size: 0.9rem; letter-spacing: 2px; }
+    .testi-text { color: var(--muted); font-size: 0.9rem; line-height: 1.7; font-style: italic; flex: 1; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+    }
+    .testi-name { font-weight: 600; font-size: 0.9rem; }
+    .testi-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(34,211,165,0.05));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cta-section .glow-purple { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .cta-title {
+      font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.2rem;
+      position: relative; z-index: 1;
+    }
+    .cta-sub { color: var(--muted); font-size: 1rem; margin-bottom: 2.5rem; position: relative; z-index: 1; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 5%;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+    .footer-logo span { color: var(--accent); }
+    .footer-text { color: var(--muted); font-size: 0.82rem; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .forwho-grid { grid-template-columns: 1fr; }
+      .forwho-card:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-wrap { grid-template-columns: 1fr; gap: 3rem; }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      section { padding: 70px 5%; }
+      .hero { padding: 100px 5% 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Conecta<span>Talentos</span></a>
+  <div class="nav-links">
+    <a href="#forwho">Para quem</a>
+    <a href="#features">Funcionalidades</a>
+    <a href="#howitworks">Como funciona</a>
+    <a href="#testimonials">Depoimentos</a>
+  </div>
+  <div class="nav-ctas">
+    <a href="candidato.html" class="btn-nav-outline">Sou Candidato</a>
+    <a href="empresa.html" class="btn-nav-solid">Sou Empresa</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-purple"></div>
+  <div class="glow-green"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    MVP em desenvolvimento — Projeto Acadêmico
+  </div>
+
+  <h1>
+    A ponte entre<br/>
+    <span class="highlight">jovens talentos</span><br/>
+    e o mercado de trabalho
+  </h1>
+
+  <p class="hero-sub">
+    O ConectaTalentos conecta quem está buscando a primeira oportunidade com empresas que acreditam no potencial de novos profissionais. Sem burocracia, sem exigência de experiência.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="candidato.html" class="btn-hero-primary">🚀 Quero minha primeira vaga</a>
+    <a href="empresa.html" class="btn-hero-secondary">🏢 Quero contratar talentos</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">48+</div>
+      <div class="hero-stat-label">Vagas disponíveis</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">200+</div>
+      <div class="hero-stat-label">Jovens cadastrados</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">30+</div>
+      <div class="hero-stat-label">Empresas parceiras</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">0</div>
+      <div class="hero-stat-label">Exigência de experiência</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Role para baixo</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PARA QUEM -->
+<section class="forwho" id="forwho">
+  <div style="text-align:center; margin-bottom:1rem;">
+    <span class="section-label reveal">Para quem é o ConectaTalentos?</span>
+  </div>
+  <div style="text-align:center;">
+    <h2 class="section-title reveal">Dois lados, uma só plataforma</h2>
+    <p class="section-sub reveal" style="margin:0 auto 0;">Desenvolvido para resolver o problema dos dois lados: o jovem que não consegue entrar no mercado e a empresa que não acha candidatos ideais.</p>
+  </div>
+
+  <div class="forwho-grid">
+    <div class="forwho-card reveal">
+      <span class="forwho-icon">🎓</span>
+      <h3 class="forwho-title">Para Candidatos</h3>
+      <p class="forwho-desc">Jovens do ensino médio, técnico ou faculdade que estão buscando sua primeira oportunidade no mercado de trabalho.</p>
+      <ul class="forwho-list">
+        <li>Crie seu currículo digital em minutos</li>
+        <li>Apareça nas buscas das empresas automaticamente</li>
+        <li>Candidate-se a vagas com poucos cliques</li>
+        <li>Acompanhe todas as suas candidaturas</li>
+        <li>Sem necessidade de experiência prévia</li>
+      </ul>
+      <a href="candidato.html" class="btn-forwho btn-candidate">Acessar como Candidato →</a>
+    </div>
+
+    <div class="forwho-card reveal reveal-delay-2">
+      <span class="forwho-icon">🏢</span>
+      <h3 class="forwho-title">Para Empresas</h3>
+      <p class="forwho-desc">Empresas que desejam contratar jovens talentos sem perder tempo em plataformas genéricas e sobrecarregadas.</p>
+      <ul class="forwho-list">
+        <li>Publique vagas em segundos</li>
+        <li>Busque candidatos por palavras-chave e habilidades</li>
+        <li>Acesse currículos mesmo de quem não se candidatou</li>
+        <li>Envie convites para entrevistas direto pela plataforma</li>
+        <li>Encontre perfis alinhados com sua cultura</li>
+      </ul>
+      <a href="empresa.html" class="btn-forwho btn-company">Acessar como Empresa →</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FUNCIONALIDADES -->
+<section id="features">
+  <div class="features-header">
+    <span class="section-label reveal">Funcionalidades</span>
+    <h2 class="section-title reveal">Tudo que você precisa,<br/>sem o que você não precisa</h2>
+    <p class="section-sub reveal">Focamos no essencial para fazer a conexão acontecer de forma rápida e eficiente.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-purple">📄</div>
+      <h4 class="feature-title">Currículo Digital</h4>
+      <p class="feature-desc">Monte seu currículo completo com dados pessoais, escolaridade, habilidades e certificados. Ele fica visível para todas as empresas da plataforma.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon fi-green">🔍</div>
+      <h4 class="feature-title">Busca por Palavras-chave</h4>
+      <p class="feature-desc">Empresas encontram candidatos buscando por habilidades específicas como "Excel", "Atendimento" ou "Informática Básica". Você aparece automaticamente.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon fi-yellow">⚡</div>
+      <h4 class="feature-title">Candidatura em 1 Clique</h4>
+      <p class="feature-desc">Viu uma vaga interessante? Candidate-se instantaneamente sem precisar reescrever seu currículo ou preencher formulários longos.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <div class="feature-icon fi-purple">📢</div>
+      <h4 class="feature-title">Publicação de Vagas</h4>
+      <p class="feature-desc">Empresas publicam vagas com título, tipo de contrato, localidade e habilidades buscadas. A vaga aparece instantaneamente para os candidatos.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-4">
+      <div class="feature-icon fi-green">📬</div>
+      <h4 class="feature-title">Convite para Entrevista</h4>
+      <p class="feature-desc">Empresas podem enviar convites diretamente para candidatos que acharam interessantes — mesmo que o jovem não tenha se candidatado à vaga.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-5">
+      <div class="feature-icon fi-yellow">📊</div>
+      <h4 class="feature-title">Acompanhamento em Tempo Real</h4>
+      <p class="feature-desc">Candidatos acompanham todas as candidaturas em um painel. Empresas visualizam todos os currículos recebidos e seu status.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMO FUNCIONA -->
+<section class="howitworks" id="howitworks">
+  <div class="howitworks-header">
+    <span class="section-label reveal">Como funciona</span>
+    <h2 class="section-title reveal">Do cadastro à entrevista,<br/>em poucos passos</h2>
+    <p class="section-sub reveal">Simplificamos ao máximo o processo para que a conexão aconteça o mais rápido possível.</p>
+  </div>
+
+  <div class="steps-wrap">
+    <!-- CANDIDATO -->
+    <div class="reveal">
+      <div class="steps-group-title">
+        🎓 Fluxo do Candidato <span class="pill pill-purple">Jovem</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-purple">1</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Crie sua conta gratuita</div>
+            <div class="step-desc">Cadastro simples com nome, e-mail e senha. Sem taxas, sem burocracia.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-purple">2</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Monte seu currículo digital</div>
+            <div class="step-desc">Preencha seus dados, escolaridade e adicione suas habilidades. Quanto mais completo, mais você aparece nas buscas.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-purple">3</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Explore as vagas disponíveis</div>
+            <div class="step-desc">Filtre por cargo, tipo de contrato ou modalidade e encontre oportunidades compatíveis com seu perfil.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-purple">4</div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Candidate-se e aguarde o contato</div>
+            <div class="step-desc">Com um clique sua candidatura é enviada. Acompanhe o status no painel e receba convites de entrevista.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPRESA -->
+    <div class="reveal reveal-delay-2">
+      <div class="steps-group-title">
+        🏢 Fluxo da Empresa <span class="pill pill-green">Recrutador</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-green">1</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Cadastre sua empresa</div>
+            <div class="step-desc">Informe razão social, CNPJ e setor. Conta criada em menos de 2 minutos.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-green">2</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Publique uma vaga</div>
+            <div class="step-desc">Defina título, tipo de contrato, localidade e as habilidades que você procura. A vaga é publicada instantaneamente.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-green">3</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Busque candidatos ativamente</div>
+            <div class="step-desc">Use a busca por palavras-chave para encontrar perfis compatíveis mesmo entre quem não se candidatou.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num sn-green">4</div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Convide para entrevista</div>
+            <div class="step-desc">Encontrou o perfil ideal? Envie um convite de entrevista diretamente pela plataforma com um clique.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DEPOIMENTOS -->
+<section id="testimonials">
+  <div class="testimonials-header">
+    <span class="section-label reveal">Depoimentos</span>
+    <h2 class="section-title reveal">O que dizem sobre o ConectaTalentos</h2>
+    <p class="section-sub reveal">Histórias reais de quem encontrou sua oportunidade ou seu talento pela plataforma.</p>
+  </div>
+
+  <div class="testimonials-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Eu tinha tentado me cadastrar em várias plataformas mas sempre pediam experiência. No ConectaTalentos consegui minha primeira entrevista em menos de uma semana!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#6c63ff,#22d3a5);">A</div>
+        <div>
+          <div class="testi-name">Arthur Silva</div>
+          <div class="testi-role">Estudante Técnico em TI — Contratado como estagiário</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Finalmente uma plataforma que entende que jovens têm potencial mesmo sem experiência. Consegui meu estágio em marketing em 3 dias após criar meu perfil."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#fbbf24,#f97316);">M</div>
+        <div>
+          <div class="testi-name">Mariana Costa</div>
+          <div class="testi-role">Ensino Médio Completo — Contratada como Jovem Aprendiz</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Como recrutador, perdia horas filtrando candidatos no LinkedIn. Aqui busco por 'Excel + Logística' e já aparecem os perfis certos. Muito mais eficiente!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#22d3a5,#3b82f6);">R</div>
+        <div>
+          <div class="testi-name">Rafael Mendes</div>
+          <div class="testi-role">Analista de RH — Fast Log Brasil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="glow-purple"></div>
+  <h2 class="cta-title reveal">
+    Pronto para dar o<br/>
+    <span style="background:linear-gradient(135deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">primeiro passo?</span>
+  </h2>
+  <p class="cta-sub reveal">Acesse a plataforma agora e faça a conexão acontecer.</p>
+  <div class="cta-btns reveal">
+    <a href="candidato.html" class="btn-hero-primary">🚀 Acessar como Candidato</a>
+    <a href="empresa.html" class="btn-hero-secondary">🏢 Acessar como Empresa</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Conecta<span>Talentos</span></div>
+  <div class="footer-text">Projeto Acadêmico — MVP Funcional | Prof. Rai</div>
+  <div class="footer-links">
+    <a href="candidato.html">Portal Candidato</a>
+    <a href="empresa.html">Portal Empresa</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

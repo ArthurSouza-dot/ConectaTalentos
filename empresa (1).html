@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConectaTalentos — Empresa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0f0a;
+      --surface: #111811;
+      --surface2: #1a221a;
+      --border: #2a3d2a;
+      --accent: #22d3a5;
+      --accent2: #4ade80;
+      --blue: #6c63ff;
+      --red: #ff5f7e;
+      --yellow: #fbbf24;
+      --text: #e8f0e8;
+      --muted: #70a070;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(34,211,165,0.1) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed; bottom: -200px; left: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(108,99,255,0.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,15,10,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-family: var(--font-display); font-weight: 800; font-size: 1.3rem;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .logo-badge {
+      font-size: 0.68rem; font-weight: 700;
+      background: rgba(34,211,165,0.15); color: var(--accent);
+      padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(34,211,165,0.3);
+    }
+    .nav-switch { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); }
+    .nav-switch a {
+      color: var(--blue); text-decoration: none; font-weight: 500;
+      padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-switch a:hover { background: var(--surface2); color: var(--text); }
+
+    .app { display: flex; min-height: calc(100vh - 64px); position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 230px; min-height: calc(100vh - 64px);
+      background: var(--surface); border-right: 1px solid var(--border);
+      padding: 2rem 1rem; display: flex; flex-direction: column; gap: 4px;
+      position: sticky; top: 64px; height: calc(100vh - 64px);
+    }
+    .sidebar-label {
+      font-size: 0.7rem; font-weight: 600; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0 0.75rem; margin: 1rem 0 0.5rem;
+    }
+    .sidebar-label:first-child { margin-top: 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      color: var(--muted); font-size: 0.9rem; font-weight: 500;
+      transition: all 0.18s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(34,211,165,0.12); color: var(--accent); }
+    .nav-item .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .user-chip {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; background: var(--surface2);
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .user-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .user-role { font-size: 0.72rem; color: var(--muted); }
+
+    .content { flex: 1; padding: 2.5rem; overflow-y: auto; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 0.35rem; }
+    h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.3rem 1.5rem; display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 800; }
+    .stat-value.green { color: var(--accent); }
+    .stat-value.blue { color: var(--blue); }
+    .stat-value.yellow { color: var(--yellow); }
+
+    .btn {
+      padding: 10px 20px; border-radius: 10px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; border: none; transition: all 0.18s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: var(--accent); color: #0a0f0a; font-weight: 700; }
+    .btn-primary:hover { background: #2ee8b5; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(34,211,165,0.35); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background: var(--surface2); }
+    .btn-blue { background: rgba(108,99,255,0.15); color: #a78bfa; border: 1px solid rgba(108,99,255,0.3); }
+    .btn-blue:hover { background: rgba(108,99,255,0.25); }
+    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-green { background: rgba(34,211,165,0.15); color: var(--accent); }
+    .badge-blue { background: rgba(108,99,255,0.15); color: #a78bfa; }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .badge-red { background: rgba(255,95,126,0.15); color: var(--red); }
+
+    label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    input, textarea, select {
+      width: 100%; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-family: var(--font-body); font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+    /* SEARCH */
+    .search-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 16px; margin-bottom: 1.5rem;
+    }
+    .search-bar input { background: none; border: none; flex: 1; padding: 0; font-size: 0.92rem; }
+
+    /* CANDIDATO CARD */
+    .cand-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.3rem 1.5rem; margin-bottom: 0.8rem;
+      transition: border-color 0.2s; display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .cand-card:hover { border-color: var(--accent); }
+    .cand-avatar {
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: #fff;
+    }
+    .cand-info { flex: 1; }
+    .cand-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+    .cand-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
+    .cand-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .cand-actions { display: flex; gap: 8px; }
+
+    /* VAGA PUBLICADA */
+    .vaga-pub {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.2rem 1.5rem; margin-bottom: 0.8rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .vaga-pub-info { flex: 1; }
+    .vaga-pub-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; }
+    .vaga-pub-meta { font-size: 0.82rem; color: var(--muted); }
+    .vaga-pub-actions { display: flex; gap: 8px; align-items: center; }
+
+    /* CURRICULOS RECEBIDOS */
+    .curriculo-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.2rem 1.5rem; margin-bottom: 0.8rem;
+    }
+    .curriculo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .curriculo-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+    .curriculo-vaga { font-size: 0.82rem; color: var(--muted); }
+    .curriculo-body { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+    .curriculo-footer { display: flex; justify-content: space-between; align-items: center; }
+
+    /* LOGIN */
+    .login-wrap { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .login-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+      padding: 2.5rem 2rem; width: 100%; max-width: 440px;
+    }
+    .login-logo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; text-align: center; margin-bottom: 0.3rem; }
+    .login-logo span { color: var(--accent); }
+    .login-sub { text-align: center; color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+    .tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 1.5rem; }
+    .tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--muted); transition: all 0.2s; border: none; background: none; }
+    .tab.active { background: var(--accent); color: #0a0f0a; font-weight: 700; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.82rem; color: var(--muted); }
+    .login-footer a { color: #a78bfa; text-decoration: none; }
+
+    /* NOTIFICATION */
+    .notif {
+      background: rgba(34,211,165,0.08); border: 1px solid rgba(34,211,165,0.2);
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 1rem;
+      font-size: 0.88rem; display: flex; align-items: center; gap: 10px;
+    }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 1.5rem; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Conecta<span>Talentos</span> <span class="logo-badge">EMPRESA</span></a>
+  <div class="nav-switch">
+    <span>É candidato?</span>
+    <a href="candidato.html">Acessar Portal Candidato →</a>
+  </div>
+</nav>
+
+<div class="app">
+  <aside class="sidebar">
+    <span class="sidebar-label">Menu</span>
+    <button class="nav-item active" onclick="showPage('login')">
+      <span class="icon">🔑</span> Login / Cadastro
+    </button>
+    <button class="nav-item" onclick="showPage('publicar')">
+      <span class="icon">📢</span> Publicar Vaga
+    </button>
+    <button class="nav-item" onclick="showPage('buscar')">
+      <span class="icon">🔍</span> Buscar Candidatos
+    </button>
+    <button class="nav-item" onclick="showPage('curriculos')">
+      <span class="icon">📥</span> Currículos Recebidos
+    </button>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">TN</div>
+        <div>
+          <div class="user-name">TechNova Ltda.</div>
+          <div class="user-role">Conta Empresa</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- PAGE: LOGIN EMPRESA -->
+    <div class="page active" id="page-login">
+      <div class="login-wrap" style="min-height:auto;">
+        <div class="login-box">
+          <div class="login-logo">Conecta<span>Talentos</span></div>
+          <div class="login-sub">Portal exclusivo para empresas recrutadoras 🏢</div>
+
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('emp-tab','entrar')">Entrar</button>
+            <button class="tab" onclick="switchTab('emp-tab','cadastrar')">Cadastrar Empresa</button>
+          </div>
+
+          <div class="tab-content active" id="emp-tab-entrar">
+            <div class="form-group"><label>E-mail corporativo</label><input type="email" value="rh@technova.com.br"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" value="senha123"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('publicar')">
+              Entrar como Empresa
+            </button>
+          </div>
+
+          <div class="tab-content" id="emp-tab-cadastrar">
+            <div class="form-group"><label>Razão Social / Nome da Empresa</label><input type="text" placeholder="Ex: TechNova Ltda."/></div>
+            <div class="form-row">
+              <div class="form-group"><label>CNPJ</label><input type="text" placeholder="00.000.000/0001-00"/></div>
+              <div class="form-group"><label>Setor</label>
+                <select>
+                  <option>Tecnologia</option>
+                  <option>Varejo</option>
+                  <option>Logística</option>
+                  <option>Saúde</option>
+                  <option>Educação</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>E-mail corporativo</label><input type="email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" placeholder="Crie uma senha segura"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('publicar')">
+              Cadastrar Empresa
+            </button>
+          </div>
+
+          <div class="login-footer">
+            É candidato? <a href="candidato.html">Acesse o portal de candidatos →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: PUBLICAR VAGA -->
+    <div class="page" id="page-publicar">
+      <h1>Publicar Nova Vaga</h1>
+      <p class="subtitle">Encontre os melhores jovens talentos para sua equipe.</p>
+
+      <div id="notif-vaga" style="display:none;" class="notif">
+        ✅ Vaga publicada com sucesso! Ela já está visível para os candidatos.
+      </div>
+
+      <div class="card">
+        <h2>📋 Informações da Vaga</h2>
+        <div class="form-row">
+          <div class="form-group"><label>Título da Vaga</label><input type="text" id="vaga-titulo" placeholder="Ex: Auxiliar de TI"/></div>
+          <div class="form-group"><label>Tipo de Contrato</label>
+            <select id="vaga-tipo">
+              <option>Estágio</option>
+              <option>Jovem Aprendiz</option>
+              <option>CLT Júnior</option>
+              <option>Freelance</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Localidade</label><input type="text" placeholder="Ex: São Paulo, SP"/></div>
+          <div class="form-group"><label>Modalidade</label>
+            <select>
+              <option>Presencial</option>
+              <option>Remoto</option>
+              <option>Híbrido</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Salário / Bolsa (opcional)</label><input type="text" placeholder="Ex: R$ 800,00 / mês"/></div>
+          <div class="form-group"><label>Carga Horária</label><input type="text" placeholder="Ex: 30h semanais"/></div>
+        </div>
+        <div class="form-group"><label>Descrição da vaga</label>
+          <textarea placeholder="Descreva as atividades, requisitos e benefícios...">Estamos buscando um jovem talento para integrar nossa equipe de TI. Não é necessária experiência prévia — buscamos disposição para aprender e crescer com a gente!</textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🏷️ Palavras-chave / Habilidades Buscadas</h2>
+        <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Essas palavras são usadas para encontrar candidatos compatíveis automaticamente.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;" id="kw-box">
+          <span class="badge badge-green">Informática Básica</span>
+          <span class="badge badge-green">Windows</span>
+          <span class="badge badge-green">Comunicação</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="new-kw" placeholder="Ex: Excel, Atendimento, Inglês..."/>
+          <button class="btn btn-outline btn-sm" onclick="addKeyword()">+ Adicionar</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline">Salvar Rascunho</button>
+        <button class="btn btn-primary" onclick="publicarVaga()">📢 Publicar Vaga</button>
+      </div>
+    </div>
+
+    <!-- PAGE: BUSCAR CANDIDATOS -->
+    <div class="page" id="page-buscar">
+      <h1>Buscar Candidatos</h1>
+      <p class="subtitle">Encontre jovens talentos por habilidades, escolaridade ou localização.</p>
+
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="form-row-3">
+          <div class="form-group" style="margin:0;"><label>Habilidade / Palavra-chave</label><input type="text" placeholder="Ex: Excel, Python, Canva..." id="busca-input"/></div>
+          <div class="form-group" style="margin:0;"><label>Escolaridade</label>
+            <select>
+              <option value="">Qualquer nível</option>
+              <option>Ensino Médio</option>
+              <option>Ensino Técnico</option>
+              <option>Ensino Superior</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0;"><label>Cidade</label><input type="text" placeholder="Ex: São Paulo"/></div>
+        </div>
+        <div style="margin-top:1rem;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary" onclick="buscar()">🔍 Buscar Candidatos</button>
+        </div>
+      </div>
+
+      <div id="resultado-busca">
+        <div class="cand-card">
+          <div class="cand-avatar" style="background:linear-gradient(135deg,#6c63ff,#22d3a5);">A</div>
+          <div class="cand-info">
+            <div class="cand-name">Arthur Silva</div>
+            <div class="cand-sub">Técnico em Informática — ETEC | São Paulo, SP</div>
+            <div class="cand-tags">
+              <span class="badge badge-green">Windows</span>
+              <span class="badge badge-green">Informática Básica</span>
+              <span class="badge badge-green">Excel</span>
+              <span class="badge badge-blue">Redes</span>
+            </div>
+            <div class="cand-actions">
+              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Arthur Silva')">✉️ Convidar para Entrevista</button>
+              <button class="btn btn-outline btn-sm" onclick="showPage('curriculos')">Ver Currículo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cand-card">
+          <div class="cand-avatar" style="background:linear-gradient(135deg,#fbbf24,#f97316);">M</div>
+          <div class="cand-info">
+            <div class="cand-name">Mariana Costa</div>
+            <div class="cand-sub">Ensino Médio Completo | Santo André, SP</div>
+            <div class="cand-tags">
+              <span class="badge badge-green">Comunicação</span>
+              <span class="badge badge-green">Atendimento</span>
+              <span class="badge badge-blue">Excel</span>
+              <span class="badge badge-yellow">Disponibilidade Imediata</span>
+            </div>
+            <div class="cand-actions">
+              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Mariana Costa')">✉️ Convidar para Entrevista</button>
+              <button class="btn btn-outline btn-sm">Ver Currículo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cand-card">
+          <div class="cand-avatar" style="background:linear-gradient(135deg,#22d3a5,#3b82f6);">R</div>
+          <div class="cand-info">
+            <div class="cand-name">Rafael Moura</div>
+            <div class="cand-sub">Técnico em Administração — Senai | Guarulhos, SP</div>
+            <div class="cand-tags">
+              <span class="badge badge-green">Excel</span>
+              <span class="badge badge-green">Organização</span>
+              <span class="badge badge-blue">Logística</span>
+            </div>
+            <div class="cand-actions">
+              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Rafael Moura')">✉️ Convidar para Entrevista</button>
+              <button class="btn btn-outline btn-sm">Ver Currículo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: CURRICULOS RECEBIDOS -->
+    <div class="page" id="page-curriculos">
+      <h1>Currículos Recebidos</h1>
+      <p class="subtitle">Candidatos que se inscreveram nas suas vagas.</p>
+
+      <div class="card-grid">
+        <div class="stat-card"><span class="stat-label">Total recebidos</span><span class="stat-value green" id="total-curric">3</span></div>
+        <div class="stat-card"><span class="stat-label">Não avaliados</span><span class="stat-value yellow">2</span></div>
+        <div class="stat-card"><span class="stat-label">Convidados</span><span class="stat-value blue" id="total-convidados">1</span></div>
+      </div>
+
+      <div id="lista-curriculos">
+        <div class="curriculo-card">
+          <div class="curriculo-header">
+            <div>
+              <div class="curriculo-name">Arthur Silva</div>
+              <div class="curriculo-vaga">📌 Auxiliar de TI — Suporte</div>
+            </div>
+            <span class="badge badge-yellow">Novo</span>
+          </div>
+          <div class="curriculo-body">
+            Estudante do ensino técnico em Informática pela ETEC. Possui conhecimentos em Windows, Redes e Excel. Disponibilidade imediata para estágio.
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+            <span class="badge badge-green">Windows</span>
+            <span class="badge badge-green">Redes</span>
+            <span class="badge badge-blue">Excel</span>
+          </div>
+          <div class="curriculo-footer">
+            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 08/06/2026</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm">Arquivar</button>
+              <button class="btn btn-primary btn-sm" onclick="convidarLista(this)">✉️ Convidar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculo-card">
+          <div class="curriculo-header">
+            <div>
+              <div class="curriculo-name">Mariana Costa</div>
+              <div class="curriculo-vaga">📌 Jovem Aprendiz — Administrativo</div>
+            </div>
+            <span class="badge badge-yellow">Novo</span>
+          </div>
+          <div class="curriculo-body">
+            Ensino médio completo. Cursou atendimento ao cliente pelo Senac. Comunicativa, pró-ativa e com boa postura profissional.
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+            <span class="badge badge-green">Comunicação</span>
+            <span class="badge badge-green">Atendimento</span>
+          </div>
+          <div class="curriculo-footer">
+            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 07/06/2026</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm">Arquivar</button>
+              <button class="btn btn-primary btn-sm" onclick="convidarLista(this)">✉️ Convidar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculo-card" style="border-color:rgba(34,211,165,0.4);">
+          <div class="curriculo-header">
+            <div>
+              <div class="curriculo-name">Rafael Moura</div>
+              <div class="curriculo-vaga">📌 Operador de Logística</div>
+            </div>
+            <span class="badge badge-green">Convidado</span>
+          </div>
+          <div class="curriculo-body">
+            Técnico em Administração pelo Senai. Experiência em organização de estoque em estágio escolar. Disponível para trabalho presencial.
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+            <span class="badge badge-green">Organização</span>
+            <span class="badge badge-blue">Logística</span>
+          </div>
+          <div class="curriculo-footer">
+            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 06/06/2026</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm">Ver detalhes</button>
+              <button class="btn btn-outline btn-sm" disabled style="opacity:0.4;">✅ Convidado</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    const map = { login: 0, publicar: 1, buscar: 2, curriculos: 3 };
+    const items = document.querySelectorAll('.nav-item');
+    if (map[name] !== undefined) items[map[name]].classList.add('active');
+  }
+
+  function switchTab(group, tab) {
+    document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
+    document.getElementById(`${group}-${tab}`).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function addKeyword() {
+    const input = document.getElementById('new-kw');
+    const val = input.value.trim();
+    if (!val) return;
+    const box = document.getElementById('kw-box');
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-green';
+    badge.textContent = val;
+    box.appendChild(badge);
+    input.value = '';
+  }
+
+  let vagasPublicadas = 0;
+  function publicarVaga() {
+    const titulo = document.getElementById('vaga-titulo').value || 'Nova Vaga';
+    const tipo = document.getElementById('vaga-tipo').value;
+    const notif = document.getElementById('notif-vaga');
+    notif.style.display = 'flex';
+    notif.textContent = `✅ Vaga "${titulo}" publicada com sucesso! Já está visível para os candidatos.`;
+    setTimeout(() => { notif.style.display = 'none'; }, 4000);
+    vagasPublicadas++;
+  }
+
+  function buscar() {
+    const input = document.getElementById('busca-input').value;
+    const box = document.getElementById('resultado-busca');
+    box.style.opacity = '0.4';
+    setTimeout(() => { box.style.opacity = '1'; }, 500);
+  }
+
+  let convCount = 1;
+  function convidar(btn, nome) {
+    btn.textContent = '✅ Convite enviado!';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    convCount++;
+    document.getElementById('total-convidados').textContent = convCount;
+  }
+
+  function convidarLista(btn) {
+    btn.textContent = '✅ Convidado';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    const card = btn.closest('.curriculo-card');
+    const badge = card.querySelector('.badge');
+    badge.className = 'badge badge-green';
+    badge.textContent = 'Convidado';
+    card.style.borderColor = 'rgba(34,211,165,0.4)';
+    convCount++;
+    document.getElementById('total-convidados').textContent = convCount;
+  }
+
+  document.getElementById('new-kw').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addKeyword();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConectaTalentos — Candidato</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c27;
+      --border: #2a2a3d;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --green: #22d3a5;
+      --red: #ff5f7e;
+      --yellow: #fbbf24;
+      --text: #e8e8f0;
+      --muted: #7070a0;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* BG EFFECT */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -200px; right: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(34,211,165,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.3rem;
+      color: var(--text);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-switch {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--muted);
+    }
+    .nav-switch a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .nav-switch a:hover { background: var(--surface2); color: var(--text); }
+
+    /* MAIN LAYOUT */
+    .app {
+      display: flex;
+      min-height: calc(100vh - 64px);
+      position: relative; z-index: 1;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      min-height: calc(100vh - 64px);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1rem;
+      display: flex; flex-direction: column; gap: 4px;
+      position: sticky; top: 64px; height: calc(100vh - 64px);
+    }
+    .sidebar-label {
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0 0.75rem;
+      margin: 1rem 0 0.5rem;
+    }
+    .sidebar-label:first-child { margin-top: 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.9rem; font-weight: 500;
+      transition: all 0.18s;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(108,99,255,0.15); color: var(--accent2); }
+    .nav-item .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .user-chip {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--surface2);
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .user-info { overflow: hidden; }
+    .user-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 0.72rem; color: var(--muted); }
+
+    /* CONTENT */
+    .content {
+      flex: 1;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* TYPOGRAPHY */
+    h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 0.35rem; line-height: 1.2; }
+    h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.3rem 1.5rem;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 800; }
+    .stat-value.purple { color: var(--accent2); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.yellow { color: var(--yellow); }
+
+    /* BUTTONS */
+    .btn {
+      padding: 10px 20px; border-radius: 10px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; border: none; transition: all 0.18s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #7c74ff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(108,99,255,0.4); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background: var(--surface2); }
+    .btn-green { background: rgba(34,211,165,0.15); color: var(--green); border: 1px solid rgba(34,211,165,0.3); }
+    .btn-green:hover { background: rgba(34,211,165,0.25); }
+    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+
+    /* BADGE */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-purple { background: rgba(108,99,255,0.15); color: var(--accent2); }
+    .badge-green { background: rgba(34,211,165,0.15); color: var(--green); }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .badge-red { background: rgba(255,95,126,0.15); color: var(--red); }
+
+    /* FORM */
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    input, textarea, select {
+      width: 100%; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-family: var(--font-body); font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 100px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .tag-input {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px 12px; min-height: 46px;
+    }
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(108,99,255,0.2); color: var(--accent2);
+      padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    }
+    .tag-x { cursor: pointer; opacity: 0.6; }
+    .tag-x:hover { opacity: 1; }
+
+    /* VAGA CARD */
+    .vaga-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.3rem 1.5rem;
+      margin-bottom: 0.8rem;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .vaga-card:hover { border-color: var(--accent); transform: translateX(4px); }
+    .vaga-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .vaga-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+    .vaga-empresa { font-size: 0.83rem; color: var(--muted); margin-bottom: 8px; }
+    .vaga-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .vaga-footer { display: flex; justify-content: space-between; align-items: center; }
+    .vaga-local { font-size: 0.8rem; color: var(--muted); }
+
+    /* CANDIDATURAS */
+    .candidatura-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 0.8rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .candidatura-info { flex: 1; }
+    .candidatura-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
+    .candidatura-empresa { font-size: 0.82rem; color: var(--muted); }
+    .candidatura-date { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+    /* SEARCH */
+    .search-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 16px;
+      margin-bottom: 1.5rem;
+    }
+    .search-bar input {
+      background: none; border: none; flex: 1; padding: 0;
+      font-size: 0.92rem;
+    }
+    .search-icon { color: var(--muted); font-size: 1rem; }
+
+    /* DIVIDER */
+    hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    /* LOGIN */
+    .login-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      width: 100%; max-width: 420px;
+    }
+    .login-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      text-align: center; margin-bottom: 0.4rem;
+    }
+    .login-logo span { color: var(--accent); }
+    .login-sub { text-align: center; color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+    .tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 1.5rem; }
+    .tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--muted); transition: all 0.2s; border: none; background: none; }
+    .tab.active { background: var(--accent); color: #fff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.82rem; color: var(--muted); }
+    .login-footer a { color: var(--accent2); text-decoration: none; }
+
+    /* PROGRESS */
+    .progress-bar { height: 6px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width 0.4s; }
+
+    /* NOTIFICATION DOT */
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: auto; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Conecta<span>Talentos</span></a>
+  <div class="nav-switch">
+    <span>Sou uma empresa?</span>
+    <a href="empresa.html">Acessar Portal Empresa →</a>
+  </div>
+</nav>
+
+<div class="app">
+  <aside class="sidebar">
+    <span class="sidebar-label">Menu</span>
+    <button class="nav-item active" onclick="showPage('login')">
+      <span class="icon">🔑</span> Login / Cadastro
+    </button>
+    <button class="nav-item" onclick="showPage('vagas')">
+      <span class="icon">🔍</span> Vagas Disponíveis
+    </button>
+    <button class="nav-item" onclick="showPage('curriculo')">
+      <span class="icon">📄</span> Meu Currículo
+    </button>
+    <button class="nav-item" onclick="showPage('candidaturas')">
+      <span class="icon">📬</span> Candidaturas <span class="dot"></span>
+    </button>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Arthur Silva</div>
+          <div class="user-role">Candidato</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- PAGE: LOGIN -->
+    <div class="page active" id="page-login">
+      <div class="login-wrap" style="min-height:auto;">
+        <div class="login-box">
+          <div class="login-logo">Conecta<span>Talentos</span></div>
+          <div class="login-sub">Sua primeira oportunidade começa aqui 🚀</div>
+
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('login-tab','entrar')">Entrar</button>
+            <button class="tab" onclick="switchTab('login-tab','cadastrar')">Criar Conta</button>
+          </div>
+
+          <div class="tab-content active" id="login-tab-entrar">
+            <div class="form-group">
+              <label>E-mail</label>
+              <input type="email" placeholder="seu@email.com" value="arthur@email.com"/>
+            </div>
+            <div class="form-group">
+              <label>Senha</label>
+              <input type="password" placeholder="••••••••" value="senha123"/>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('vagas')">
+              Entrar como Candidato
+            </button>
+          </div>
+
+          <div class="tab-content" id="login-tab-cadastrar">
+            <div class="form-group">
+              <label>Nome completo</label>
+              <input type="text" placeholder="Seu nome"/>
+            </div>
+            <div class="form-group">
+              <label>E-mail</label>
+              <input type="email" placeholder="seu@email.com"/>
+            </div>
+            <div class="form-group">
+              <label>Senha</label>
+              <input type="password" placeholder="Crie uma senha segura"/>
+            </div>
+            <div class="form-group">
+              <label>Escolaridade</label>
+              <select>
+                <option>Ensino Médio</option>
+                <option>Ensino Técnico</option>
+                <option>Ensino Superior</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('curriculo')">
+              Criar Conta Grátis
+            </button>
+          </div>
+
+          <div class="login-footer">
+            É uma empresa? <a href="empresa.html">Acesse o portal empresarial →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: VAGAS -->
+    <div class="page" id="page-vagas">
+      <h1>Vagas Disponíveis</h1>
+      <p class="subtitle">Oportunidades para quem está começando — sem exigência de experiência prévia.</p>
+
+      <div class="card-grid">
+        <div class="stat-card"><span class="stat-label">Vagas abertas</span><span class="stat-value purple">48</span></div>
+        <div class="stat-card"><span class="stat-label">Para iniciantes</span><span class="stat-value green">31</span></div>
+        <div class="stat-card"><span class="stat-label">Candidaturas hoje</span><span class="stat-value yellow">5</span></div>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Buscar vagas, empresas ou habilidades..."/>
+        <button class="btn btn-outline btn-sm">Filtrar</button>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <span class="badge badge-purple">Todos</span>
+        <span class="badge badge-green" style="cursor:pointer;">Estágio</span>
+        <span class="badge badge-yellow" style="cursor:pointer;">Jovem Aprendiz</span>
+        <span class="badge badge-red" style="cursor:pointer;">CLT Júnior</span>
+      </div>
+
+      <div class="vaga-card">
+        <div class="vaga-header">
+          <div>
+            <div class="vaga-title">Auxiliar de TI — Suporte</div>
+            <div class="vaga-empresa">🏢 TechSolutions Ltda.</div>
+          </div>
+          <span class="badge badge-green">Estágio</span>
+        </div>
+        <div class="vaga-tags">
+          <span class="badge badge-purple">Windows</span>
+          <span class="badge badge-purple">Redes</span>
+          <span class="badge badge-yellow">Remoto/Híbrido</span>
+        </div>
+        <div class="vaga-footer">
+          <span class="vaga-local">📍 São Paulo, SP</span>
+          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Auxiliar de TI')">Candidatar-se</button>
+        </div>
+      </div>
+
+      <div class="vaga-card">
+        <div class="vaga-header">
+          <div>
+            <div class="vaga-title">Jovem Aprendiz — Administrativo</div>
+            <div class="vaga-empresa">🏢 Grupo Nexus S.A.</div>
+          </div>
+          <span class="badge badge-yellow">Jovem Aprendiz</span>
+        </div>
+        <div class="vaga-tags">
+          <span class="badge badge-purple">Excel</span>
+          <span class="badge badge-purple">Atendimento</span>
+          <span class="badge badge-green">Presencial</span>
+        </div>
+        <div class="vaga-footer">
+          <span class="vaga-local">📍 Santo André, SP</span>
+          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Jovem Aprendiz Administrativo')">Candidatar-se</button>
+        </div>
+      </div>
+
+      <div class="vaga-card">
+        <div class="vaga-header">
+          <div>
+            <div class="vaga-title">Operador de Logística</div>
+            <div class="vaga-empresa">🏢 Fast Log Brasil</div>
+          </div>
+          <span class="badge badge-red">CLT Júnior</span>
+        </div>
+        <div class="vaga-tags">
+          <span class="badge badge-purple">Organização</span>
+          <span class="badge badge-purple">Comunicação</span>
+          <span class="badge badge-yellow">Presencial</span>
+        </div>
+        <div class="vaga-footer">
+          <span class="vaga-local">📍 Guarulhos, SP</span>
+          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Operador de Logística')">Candidatar-se</button>
+        </div>
+      </div>
+
+      <div class="vaga-card">
+        <div class="vaga-header">
+          <div>
+            <div class="vaga-title">Assistente de Marketing Digital</div>
+            <div class="vaga-empresa">🏢 Criativa Agency</div>
+          </div>
+          <span class="badge badge-green">Estágio</span>
+        </div>
+        <div class="vaga-tags">
+          <span class="badge badge-purple">Instagram</span>
+          <span class="badge badge-purple">Canva</span>
+          <span class="badge badge-yellow">Remoto</span>
+        </div>
+        <div class="vaga-footer">
+          <span class="vaga-local">📍 Remoto</span>
+          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Assistente de Marketing Digital')">Candidatar-se</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAGE: CURRÍCULO -->
+    <div class="page" id="page-curriculo">
+      <h1>Meu Currículo</h1>
+      <p class="subtitle">Preencha seu perfil para se destacar nas buscas das empresas.</p>
+
+      <div class="card">
+        <h2>👤 Dados Pessoais</h2>
+        <div class="form-row">
+          <div class="form-group"><label>Nome completo</label><input type="text" value="Arthur Silva"/></div>
+          <div class="form-group"><label>Data de nascimento</label><input type="date" value="2005-03-15"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>E-mail</label><input type="email" value="arthur@email.com"/></div>
+          <div class="form-group"><label>Telefone / WhatsApp</label><input type="tel" value="(11) 99999-1234"/></div>
+        </div>
+        <div class="form-group"><label>Cidade</label><input type="text" value="São Paulo, SP"/></div>
+        <div class="form-group"><label>Sobre mim</label><textarea>Estudante do ensino técnico em Informática, buscando minha primeira oportunidade na área de TI. Sou proativo, curioso e gosto de resolver problemas.</textarea></div>
+      </div>
+
+      <div class="card">
+        <h2>🎓 Escolaridade</h2>
+        <div class="form-row">
+          <div class="form-group"><label>Nível</label>
+            <select>
+              <option>Ensino Médio Completo</option>
+              <option selected>Ensino Técnico em andamento</option>
+              <option>Ensino Superior em andamento</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Instituição</label><input type="text" value="ETEC Centro Paula Souza"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Curso</label><input type="text" value="Técnico em Informática"/></div>
+          <div class="form-group"><label>Ano de conclusão previsto</label><input type="text" value="2026"/></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🛠️ Habilidades</h2>
+        <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Essas palavras-chave ajudam as empresas a encontrar você nas buscas.</p>
+        <div class="tag-input" id="skills-box">
+          <span class="tag">Windows <span class="tag-x" onclick="removeTag(this)">×</span></span>
+          <span class="tag">Informática Básica <span class="tag-x" onclick="removeTag(this)">×</span></span>
+          <span class="tag">Excel <span class="tag-x" onclick="removeTag(this)">×</span></span>
+          <span class="tag">Redes <span class="tag-x" onclick="removeTag(this)">×</span></span>
+          <span class="tag">Comunicação <span class="tag-x" onclick="removeTag(this)">×</span></span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <input type="text" id="new-skill" placeholder="Nova habilidade..." style="flex:1;"/>
+          <button class="btn btn-outline btn-sm" onclick="addSkill()">+ Adicionar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📚 Cursos e Certificados</h2>
+        <div class="form-group"><label>Curso</label><input type="text" value="Informática Básica — Senai (2024)"/></div>
+        <div class="form-group"><label>Curso</label><input type="text" placeholder="Ex: Excel Avançado — Coursera (2025)"/></div>
+        <button class="btn btn-outline btn-sm">+ Adicionar curso</button>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-bottom:4px;">Completude do perfil</div>
+          <div class="progress-bar" style="width:240px;"><div class="progress-fill" style="width:75%;"></div></div>
+        </div>
+        <span style="font-size:0.82rem;color:var(--green);font-weight:600;">75%</span>
+        <button class="btn btn-primary" style="margin-left:auto;" onclick="alert('Currículo salvo com sucesso! ✅')">💾 Salvar Currículo</button>
+      </div>
+    </div>
+
+    <!-- PAGE: CANDIDATURAS -->
+    <div class="page" id="page-candidaturas">
+      <h1>Minhas Candidaturas</h1>
+      <p class="subtitle">Acompanhe o status de cada vaga que você se candidatou.</p>
+
+      <div class="card-grid">
+        <div class="stat-card"><span class="stat-label">Total enviadas</span><span class="stat-value purple" id="total-cand">2</span></div>
+        <div class="stat-card"><span class="stat-label">Em análise</span><span class="stat-value yellow">2</span></div>
+        <div class="stat-card"><span class="stat-label">Respostas</span><span class="stat-value green">0</span></div>
+      </div>
+
+      <div id="lista-candidaturas">
+        <div class="candidatura-item">
+          <div class="candidatura-info">
+            <div class="candidatura-title">Auxiliar de TI — Suporte</div>
+            <div class="candidatura-empresa">TechSolutions Ltda.</div>
+            <div class="candidatura-date">Enviado em 08/06/2026</div>
+          </div>
+          <span class="badge badge-yellow">Em análise</span>
+        </div>
+        <div class="candidatura-item">
+          <div class="candidatura-info">
+            <div class="candidatura-title">Jovem Aprendiz — Administrativo</div>
+            <div class="candidatura-empresa">Grupo Nexus S.A.</div>
+            <div class="candidatura-date">Enviado em 07/06/2026</div>
+          </div>
+          <span class="badge badge-yellow">Em análise</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;text-align:center;border-style:dashed;">
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">Explore mais vagas e aumente suas chances!</p>
+        <button class="btn btn-primary" onclick="showPage('vagas')">🔍 Ver Vagas Disponíveis</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    const items = document.querySelectorAll('.nav-item');
+    const map = { login: 0, vagas: 1, curriculo: 2, candidaturas: 3 };
+    if (map[name] !== undefined) items[map[name]].classList.add('active');
+  }
+
+  function switchTab(group, tab) {
+    document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
+    document.getElementById(`${group}-${tab}`).classList.add('active');
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function removeTag(el) {
+    el.parentElement.remove();
+  }
+
+  function addSkill() {
+    const input = document.getElementById('new-skill');
+    const val = input.value.trim();
+    if (!val) return;
+    const box = document.getElementById('skills-box');
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.innerHTML = `${val} <span class="tag-x" onclick="removeTag(this)">×</span>`;
+    box.appendChild(tag);
+    input.value = '';
+  }
+
+  let candCount = 2;
+  function candidatar(btn, vaga) {
+    btn.textContent = '✅ Candidatado!';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    candCount++;
+    document.getElementById('total-cand').textContent = candCount;
+    const today = new Date().toLocaleDateString('pt-BR');
+    const lista = document.getElementById('lista-candidaturas');
+    const item = document.createElement('div');
+    item.className = 'candidatura-item';
+    item.innerHTML = `
+      <div class="candidatura-info">
+        <div class="candidatura-title">${vaga}</div>
+        <div class="candidatura-empresa">— Nova candidatura</div>
+        <div class="candidatura-date">Enviado em ${today}</div>
+      </div>
+      <span class="badge badge-yellow">Em análise</span>`;
+    lista.prepend(item);
+  }
+
+  document.getElementById('new-skill').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addSkill();
+  });
+</script>
+</body>
+</html>
