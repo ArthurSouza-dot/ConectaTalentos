@@ -339,11 +339,8 @@
 </nav>
 
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <span class="sidebar-label">Menu</span>
-    <button class="nav-item active" onclick="showPage('login')">
-      <span class="icon">🔑</span> Login / Cadastro
-    </button>
     <button class="nav-item" onclick="showPage('vagas')">
       <span class="icon">🔍</span> Vagas Disponíveis
     </button>
@@ -355,12 +352,15 @@
     </button>
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar">A</div>
+        <div class="avatar" id="sidebar-avatar">?</div>
         <div class="user-info">
-          <div class="user-name">Meu Perfil</div>
+          <div class="user-name" id="sidebar-nome">Não logado</div>
           <div class="user-role">Candidato</div>
         </div>
       </div>
+      <button class="nav-item" style="margin-top:8px;color:var(--red);" onclick="logout()">
+        <span class="icon">🚪</span> Sair
+      </button>
     </div>
   </aside>
 
@@ -373,47 +373,56 @@
           <div class="login-logo">Conecta<span>Talentos</span></div>
           <div class="login-sub">Sua primeira oportunidade começa aqui 🚀</div>
 
+          <div id="login-erro" style="display:none;background:rgba(255,95,126,0.1);border:1px solid rgba(255,95,126,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:#ff5f7e;margin-bottom:1rem;"></div>
+          <div id="login-ok" style="display:none;background:rgba(34,211,165,0.1);border:1px solid rgba(34,211,165,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:var(--green);margin-bottom:1rem;"></div>
+
           <div class="tabs">
-            <button class="tab active" onclick="switchTab('login-tab','entrar')">Entrar</button>
-            <button class="tab" onclick="switchTab('login-tab','cadastrar')">Criar Conta</button>
+            <button class="tab active" id="tab-entrar-btn" onclick="switchTab('login-tab','entrar')">Entrar</button>
+            <button class="tab" id="tab-cad-btn" onclick="switchTab('login-tab','cadastrar')">Criar Conta</button>
           </div>
 
+          <!-- ENTRAR -->
           <div class="tab-content active" id="login-tab-entrar">
             <div class="form-group">
               <label>E-mail</label>
-              <input type="email" placeholder="seu@email.com"/>
+              <input type="email" id="login-email" placeholder="seu@email.com"/>
             </div>
             <div class="form-group">
               <label>Senha</label>
-              <input type="password" placeholder="••••••••"/>
+              <input type="password" id="login-senha" placeholder="••••••••"/>
             </div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('vagas')">
-              Entrar como Candidato
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerLogin()">
+              Entrar
             </button>
           </div>
 
+          <!-- CADASTRAR -->
           <div class="tab-content" id="login-tab-cadastrar">
             <div class="form-group">
               <label>Nome completo</label>
-              <input type="text" placeholder="Seu nome"/>
+              <input type="text" id="cad-nome" placeholder="Seu nome completo"/>
             </div>
             <div class="form-group">
               <label>E-mail</label>
-              <input type="email" placeholder="seu@email.com"/>
+              <input type="email" id="cad-email" placeholder="seu@email.com"/>
             </div>
             <div class="form-group">
               <label>Senha</label>
-              <input type="password" placeholder="Crie uma senha segura"/>
+              <input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres"/>
+            </div>
+            <div class="form-group">
+              <label>Confirmar senha</label>
+              <input type="password" id="cad-senha2" placeholder="Repita a senha"/>
             </div>
             <div class="form-group">
               <label>Escolaridade</label>
-              <select>
+              <select id="cad-escolaridade">
                 <option>Ensino Médio</option>
                 <option>Ensino Técnico</option>
                 <option>Ensino Superior</option>
               </select>
             </div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('curriculo')">
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerCadastro()">
               Criar Conta Grátis
             </button>
           </div>
@@ -432,28 +441,30 @@
       <p class="subtitle">Oportunidades para quem está começando — sem exigência de experiência prévia.</p>
 
       <div class="card-grid">
-        <div class="stat-card"><span class="stat-label">Vagas abertas</span><span class="stat-value purple">0</span></div>
-        <div class="stat-card"><span class="stat-label">Para iniciantes</span><span class="stat-value green">0</span></div>
-        <div class="stat-card"><span class="stat-label">Candidaturas hoje</span><span class="stat-value yellow">0</span></div>
+        <div class="stat-card"><span class="stat-label">Vagas abertas</span><span class="stat-value purple" id="total-vagas">0</span></div>
+        <div class="stat-card"><span class="stat-label">Para iniciantes</span><span class="stat-value green" id="total-estagio">0</span></div>
+        <div class="stat-card"><span class="stat-label">Candidaturas hoje</span><span class="stat-value yellow" id="total-hoje">0</span></div>
       </div>
 
       <div class="search-bar">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Buscar vagas, empresas ou habilidades..."/>
-        <button class="btn btn-outline btn-sm">Filtrar</button>
+        <input type="text" id="busca-vagas" placeholder="Buscar vagas, empresas ou habilidades..." oninput="filtrarVagas()"/>
+        <button class="btn btn-outline btn-sm" onclick="filtrarVagas()">Filtrar</button>
       </div>
 
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;">
-        <span class="badge badge-purple">Todos</span>
-        <span class="badge badge-green" style="cursor:pointer;">Estágio</span>
-        <span class="badge badge-yellow" style="cursor:pointer;">Jovem Aprendiz</span>
-        <span class="badge badge-red" style="cursor:pointer;">CLT Júnior</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;" id="filtros-tipo">
+        <span class="badge badge-purple" style="cursor:pointer;" onclick="filtrarPorTipo('')">Todos</span>
+        <span class="badge badge-green" style="cursor:pointer;" onclick="filtrarPorTipo('Estágio')">Estágio</span>
+        <span class="badge badge-yellow" style="cursor:pointer;" onclick="filtrarPorTipo('Jovem Aprendiz')">Jovem Aprendiz</span>
+        <span class="badge badge-red" style="cursor:pointer;" onclick="filtrarPorTipo('CLT Júnior')">CLT Júnior</span>
       </div>
 
-      <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
-        <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
-        <p style="font-weight:600;margin-bottom:0.4rem;">Nenhuma vaga disponível ainda</p>
-        <p style="color:var(--muted);font-size:0.88rem;">As vagas publicadas pelas empresas aparecerão aqui.</p>
+      <div id="lista-vagas">
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhuma vaga disponível ainda</p>
+          <p style="color:var(--muted);font-size:0.88rem;">As vagas publicadas pelas empresas aparecerão aqui.</p>
+        </div>
       </div>
 
     </div>
@@ -552,7 +563,77 @@
 </div>
 
 <script>
-  // ─── STORAGE HELPERS ────────────────────────────────────────────
+  // ─── AUTH ────────────────────────────────────────────────────────
+  function getUsuarios() { return LS.get('ct_usuarios_cand', []); }
+  function getLogado()   { return LS.get('ct_logado_cand', null); }
+
+  function mostrarErro(msg)   { const el=document.getElementById('login-erro'); el.textContent=msg; el.style.display='block'; document.getElementById('login-ok').style.display='none'; }
+  function mostrarOk(msg)     { const el=document.getElementById('login-ok');   el.textContent=msg; el.style.display='block'; document.getElementById('login-erro').style.display='none'; }
+  function limparMensagens()  { document.getElementById('login-erro').style.display='none'; document.getElementById('login-ok').style.display='none'; }
+
+  function fazerCadastro() {
+    limparMensagens();
+    const nome  = document.getElementById('cad-nome').value.trim();
+    const email = document.getElementById('cad-email').value.trim().toLowerCase();
+    const senha = document.getElementById('cad-senha').value;
+    const senha2= document.getElementById('cad-senha2').value;
+    const esc   = document.getElementById('cad-escolaridade').value;
+
+    if (!nome || !email || !senha) { mostrarErro('Preencha todos os campos obrigatórios.'); return; }
+    if (senha.length < 6)          { mostrarErro('A senha deve ter pelo menos 6 caracteres.'); return; }
+    if (senha !== senha2)          { mostrarErro('As senhas não coincidem.'); return; }
+
+    const usuarios = getUsuarios();
+    if (usuarios.find(u => u.email === email)) { mostrarErro('Este e-mail já está cadastrado. Faça login.'); return; }
+
+    usuarios.push({ nome, email, senha, escolaridade: esc });
+    LS.set('ct_usuarios_cand', usuarios);
+    LS.set('ct_logado_cand', { nome, email });
+
+    mostrarOk(`Conta criada com sucesso! Bem-vindo(a), ${nome}! 🎉`);
+    setTimeout(() => entrarNoApp(nome), 1000);
+  }
+
+  function fazerLogin() {
+    limparMensagens();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const senha = document.getElementById('login-senha').value;
+
+    if (!email || !senha) { mostrarErro('Preencha e-mail e senha.'); return; }
+
+    const usuarios = getUsuarios();
+    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+    if (!usuario) { mostrarErro('E-mail ou senha incorretos.'); return; }
+
+    LS.set('ct_logado_cand', { nome: usuario.nome, email: usuario.email });
+    entrarNoApp(usuario.nome);
+  }
+
+  function entrarNoApp(nome) {
+    document.getElementById('sidebar-nome').textContent = nome;
+    document.getElementById('sidebar-avatar').textContent = nome[0].toUpperCase();
+    showPage('vagas');
+  }
+
+  function logout() {
+    if (!confirm('Deseja sair da sua conta?')) return;
+    LS.set('ct_logado_cand', null);
+    document.getElementById('sidebar-nome').textContent = 'Não logado';
+    document.getElementById('sidebar-avatar').textContent = '?';
+    limparMensagens();
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-senha').value = '';
+    showPage('login');
+  }
+
+  function verificarLogin() {
+    const logado = getLogado();
+    if (logado) {
+      document.getElementById('sidebar-nome').textContent = logado.nome;
+      document.getElementById('sidebar-avatar').textContent = logado.nome[0].toUpperCase();
+      showPage('vagas');
+    }
+  }
   const LS = {
     get: (k, fallback = null) => {
       try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : fallback; }
@@ -570,6 +651,79 @@
     const items = document.querySelectorAll('.nav-item');
     if (map[name] !== undefined) items[map[name]].classList.add('active');
     if (name === 'candidaturas') renderCandidaturas();
+    if (name === 'vagas') renderVagas();
+  }
+
+  // ─── VAGAS ──────────────────────────────────────────────────────
+  let _tipoFiltro = '';
+
+  function renderVagas(filtro = '') {
+    const vagas = LS.get('ct_vagas', []);
+    const cands = getCandidaturas();
+    const lista = document.getElementById('lista-vagas');
+
+    const vagasFiltradas = vagas.filter(v => {
+      const textoMatch = !filtro || 
+        v.titulo.toLowerCase().includes(filtro.toLowerCase()) ||
+        (v.local||'').toLowerCase().includes(filtro.toLowerCase()) ||
+        (v.keywords||[]).some(k => k.toLowerCase().includes(filtro.toLowerCase()));
+      const tipoMatch = !_tipoFiltro || v.tipo === _tipoFiltro;
+      return textoMatch && tipoMatch;
+    });
+
+    // Atualiza contadores
+    document.getElementById('total-vagas').textContent = vagas.length;
+    document.getElementById('total-estagio').textContent = vagas.filter(v => v.tipo === 'Estágio' || v.tipo === 'Jovem Aprendiz').length;
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    document.getElementById('total-hoje').textContent = cands.filter(c => c.data === hoje).length;
+
+    if (!vagasFiltradas.length) {
+      lista.innerHTML = `
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">${vagas.length ? 'Nenhuma vaga encontrada' : 'Nenhuma vaga disponível ainda'}</p>
+          <p style="color:var(--muted);font-size:0.88rem;">${vagas.length ? 'Tente outros termos de busca.' : 'As vagas publicadas pelas empresas aparecerão aqui.'}</p>
+        </div>`;
+      return;
+    }
+
+    const badgeMap = { 'Estágio': 'badge-green', 'Jovem Aprendiz': 'badge-yellow', 'CLT Júnior': 'badge-red', 'Freelance': 'badge-blue' };
+
+    lista.innerHTML = vagasFiltradas.map(v => {
+      const jaCandidatou = cands.find(c => c.vaga === v.titulo && c.vagaId === v.id);
+      const tags = (v.keywords||[]).map(k => `<span class="badge badge-purple">${k}</span>`).join('');
+      const modalBadge = v.modalidade ? `<span class="badge badge-yellow">${v.modalidade}</span>` : '';
+      return `
+        <div class="vaga-card">
+          <div class="vaga-header">
+            <div>
+              <div class="vaga-title">${v.titulo}</div>
+              <div class="vaga-empresa">🏢 ${v.local || 'Local não informado'}</div>
+            </div>
+            <span class="badge ${badgeMap[v.tipo]||'badge-purple'}">${v.tipo}</span>
+          </div>
+          ${v.descricao ? `<p style="font-size:0.83rem;color:var(--muted);margin-bottom:10px;line-height:1.5;">${v.descricao}</p>` : ''}
+          <div class="vaga-tags">${tags}${modalBadge}${v.salario ? `<span class="badge badge-green">💰 ${v.salario}</span>` : ''}</div>
+          <div class="vaga-footer">
+            <span class="vaga-local">📅 Publicado em ${v.data}</span>
+            <button class="btn btn-primary btn-sm" 
+              ${jaCandidatou ? 'disabled style="opacity:0.6;"' : ''}
+              onclick="candidatar(this,'${v.titulo.replace(/'/g,"\\'")}',${v.id})">
+              ${jaCandidatou ? '✅ Candidatado!' : 'Candidatar-se'}
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function filtrarVagas() {
+    const busca = document.getElementById('busca-vagas').value;
+    renderVagas(busca);
+  }
+
+  function filtrarPorTipo(tipo) {
+    _tipoFiltro = tipo;
+    renderVagas(document.getElementById('busca-vagas').value);
   }
 
   function switchTab(group, tab) {
@@ -687,38 +841,25 @@
     }).join('');
   }
 
-  function candidatar(btn, vaga) {
+  function candidatar(btn, vaga, vagaId) {
     const cands = getCandidaturas();
-    if (cands.find(c => c.vaga === vaga)) {
-      btn.textContent = '✅ Candidatado!';
-      btn.disabled = true;
-      btn.style.opacity = '0.6';
-      return;
-    }
+    if (cands.find(c => c.vagaId === vagaId)) return;
     btn.textContent = '✅ Candidatado!';
     btn.disabled = true;
     btn.style.opacity = '0.6';
     const today = new Date().toLocaleDateString('pt-BR');
-    cands.unshift({ vaga, empresa: '— Nova candidatura', data: today });
+    cands.unshift({ vaga, vagaId, empresa: '— Ver portal da empresa', data: today });
     LS.set('ct_candidaturas', cands);
-    document.getElementById('total-cand').textContent = cands.length;
+    renderCandidaturas();
+    renderVagas(document.getElementById('busca-vagas').value);
   }
 
   // ─── INIT ────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    verificarLogin();
     loadCurriculo();
     renderCandidaturas();
-
-    // Marcar botões de vagas já candidatadas
-    const cands = getCandidaturas().map(c => c.vaga);
-    document.querySelectorAll('[onclick^="candidatar"]').forEach(btn => {
-      const match = btn.getAttribute('onclick').match(/candidatar\(this,'(.+)'\)/);
-      if (match && cands.includes(match[1])) {
-        btn.textContent = '✅ Candidatado!';
-        btn.disabled = true;
-        btn.style.opacity = '0.6';
-      }
-    });
+    renderVagas();
   });
 
   document.getElementById('new-skill').addEventListener('keydown', e => {
