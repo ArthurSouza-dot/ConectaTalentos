@@ -6,286 +6,103 @@
   <title>ConectaTalentos — Empresa</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg: #0a0f0a;
-      --surface: #111811;
-      --surface2: #1a221a;
-      --border: #2a3d2a;
-      --accent: #22d3a5;
-      --accent2: #4ade80;
-      --blue: #6c63ff;
-      --red: #ff5f7e;
-      --yellow: #fbbf24;
-      --text: #e8f0e8;
-      --muted: #70a070;
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      position: fixed; top: -200px; right: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(34,211,165,0.1) 0%, transparent 70%);
-      pointer-events: none; z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed; bottom: -200px; left: -200px;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(108,99,255,0.07) 0%, transparent 70%);
-      pointer-events: none; z-index: 0;
-    }
-
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,15,10,0.88);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-    }
-    .logo {
-      font-family: var(--font-display); font-weight: 800; font-size: 1.3rem;
-      color: var(--text); text-decoration: none;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .logo span { color: var(--accent); }
-    .logo-badge {
-      font-size: 0.68rem; font-weight: 700;
-      background: rgba(34,211,165,0.15); color: var(--accent);
-      padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(34,211,165,0.3);
-    }
-    .nav-switch { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); }
-    .nav-switch a {
-      color: var(--blue); text-decoration: none; font-weight: 500;
-      padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s;
-    }
-    .nav-switch a:hover { background: var(--surface2); color: var(--text); }
-
-    .app { display: flex; min-height: calc(100vh - 64px); position: relative; z-index: 1; }
-
-    .sidebar {
-      width: 230px; min-height: calc(100vh - 64px);
-      background: var(--surface); border-right: 1px solid var(--border);
-      padding: 2rem 1rem; display: flex; flex-direction: column; gap: 4px;
-      position: sticky; top: 64px; height: calc(100vh - 64px);
-    }
-    .sidebar-label {
-      font-size: 0.7rem; font-weight: 600; color: var(--muted);
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0 0.75rem; margin: 1rem 0 0.5rem;
-    }
-    .sidebar-label:first-child { margin-top: 0; }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border-radius: 10px; cursor: pointer;
-      color: var(--muted); font-size: 0.9rem; font-weight: 500;
-      transition: all 0.18s; border: none; background: none; width: 100%; text-align: left;
-    }
-    .nav-item:hover { background: var(--surface2); color: var(--text); }
-    .nav-item.active { background: rgba(34,211,165,0.12); color: var(--accent); }
-    .nav-item .icon { font-size: 1.1rem; width: 20px; text-align: center; }
-    .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); }
-    .user-chip {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border-radius: 10px; background: var(--surface2);
-    }
-    .avatar {
-      width: 32px; height: 32px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--blue));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
-    .user-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
-    .user-role { font-size: 0.72rem; color: var(--muted); }
-
-    .content { flex: 1; padding: 2.5rem; overflow-y: auto; }
-    .page { display: none; animation: fadeIn 0.3s ease; }
-    .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 0.35rem; }
-    h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
-    .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
-
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 1.3rem 1.5rem; display: flex; flex-direction: column; gap: 4px;
-    }
-    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 800; }
-    .stat-value.green { color: var(--accent); }
-    .stat-value.blue { color: var(--blue); }
-    .stat-value.yellow { color: var(--yellow); }
-
-    .btn {
-      padding: 10px 20px; border-radius: 10px;
-      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
-      cursor: pointer; border: none; transition: all 0.18s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn-primary { background: var(--accent); color: #0a0f0a; font-weight: 700; }
-    .btn-primary:hover { background: #2ee8b5; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(34,211,165,0.35); }
-    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-    .btn-outline:hover { background: var(--surface2); }
-    .btn-blue { background: rgba(108,99,255,0.15); color: #a78bfa; border: 1px solid rgba(108,99,255,0.3); }
-    .btn-blue:hover { background: rgba(108,99,255,0.25); }
-    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
-
-    .badge {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-    }
-    .badge-green { background: rgba(34,211,165,0.15); color: var(--accent); }
-    .badge-blue { background: rgba(108,99,255,0.15); color: #a78bfa; }
-    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
-    .badge-red { background: rgba(255,95,126,0.15); color: var(--red); }
-
-    label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-    input, textarea, select {
-      width: 100%; padding: 10px 14px;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text);
-      font-family: var(--font-body); font-size: 0.9rem;
-      outline: none; transition: border-color 0.2s;
-    }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-    textarea { resize: vertical; min-height: 90px; }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-
-    /* SEARCH */
-    .search-bar {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 16px; margin-bottom: 1.5rem;
-    }
-    .search-bar input { background: none; border: none; flex: 1; padding: 0; font-size: 0.92rem; }
-
-    /* CANDIDATO CARD */
-    .cand-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 1.3rem 1.5rem; margin-bottom: 0.8rem;
-      transition: border-color 0.2s; display: flex; gap: 1rem; align-items: flex-start;
-    }
-    .cand-card:hover { border-color: var(--accent); }
-    .cand-avatar {
-      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 1.1rem; color: #fff;
-    }
-    .cand-info { flex: 1; }
-    .cand-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
-    .cand-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
-    .cand-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-    .cand-actions { display: flex; gap: 8px; }
-
-    /* VAGA PUBLICADA */
-    .vaga-pub {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 1.2rem 1.5rem; margin-bottom: 0.8rem;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .vaga-pub-info { flex: 1; }
-    .vaga-pub-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; }
-    .vaga-pub-meta { font-size: 0.82rem; color: var(--muted); }
-    .vaga-pub-actions { display: flex; gap: 8px; align-items: center; }
-
-    /* CURRICULOS RECEBIDOS */
-    .curriculo-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 1.2rem 1.5rem; margin-bottom: 0.8rem;
-    }
-    .curriculo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .curriculo-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
-    .curriculo-vaga { font-size: 0.82rem; color: var(--muted); }
-    .curriculo-body { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
-    .curriculo-footer { display: flex; justify-content: space-between; align-items: center; }
-
-    /* LOGIN */
-    .login-wrap { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .login-box {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
-      padding: 2.5rem 2rem; width: 100%; max-width: 440px;
-    }
-    .login-logo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; text-align: center; margin-bottom: 0.3rem; }
-    .login-logo span { color: var(--accent); }
-    .login-sub { text-align: center; color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
-    .tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 1.5rem; }
-    .tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--muted); transition: all 0.2s; border: none; background: none; }
-    .tab.active { background: var(--accent); color: #0a0f0a; font-weight: 700; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.82rem; color: var(--muted); }
-    .login-footer a { color: #a78bfa; text-decoration: none; }
-
-    /* NOTIFICATION */
-    .notif {
-      background: rgba(34,211,165,0.08); border: 1px solid rgba(34,211,165,0.2);
-      border-radius: 12px; padding: 12px 16px; margin-bottom: 1rem;
-      font-size: 0.88rem; display: flex; align-items: center; gap: 10px;
-    }
-
-    hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .content { padding: 1.5rem; }
-      .form-row, .form-row-3 { grid-template-columns: 1fr; }
-    }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 2rem; width: 100%; max-width: 480px;
-      animation: fadeIn 0.2s ease;
-    }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
-    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; line-height: 1; }
-    .modal-close:hover { color: var(--text); }
-
-    /* ── CURRICULO VIEWER ── */
-    .cv-section { margin-bottom: 1.2rem; }
-    .cv-section-title { font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
-    .cv-field { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 4px 0; border-bottom: 1px solid var(--border); }
-    .cv-field:last-child { border-bottom: none; }
-    .cv-field-label { color: var(--muted); }
-    .cv-field-value { font-weight: 500; text-align: right; max-width: 60%; }
-    .cv-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-
-    /* ── ENTREVISTAS NA LISTA ── */
-    .entrevista-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(34,211,165,0.12); color: var(--accent);
-      border: 1px solid rgba(34,211,165,0.25);
-      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-    }
+    :root{--bg:#0a0f0a;--surface:#111811;--surface2:#1a221a;--border:#2a3d2a;--accent:#22d3a5;--accent2:#4ade80;--blue:#6c63ff;--red:#ff5f7e;--yellow:#fbbf24;--text:#e8f0e8;--muted:#70a070;--font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(34,211,165,0.1) 0%,transparent 70%);pointer-events:none;z-index:0;}
+    nav{position:sticky;top:0;z-index:100;background:rgba(10,15,10,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+    .logo{font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:var(--accent);}
+    .logo-badge{font-size:0.68rem;font-weight:700;background:rgba(34,211,165,0.15);color:var(--accent);padding:2px 8px;border-radius:6px;border:1px solid rgba(34,211,165,0.3);margin-left:6px;}
+    .nav-switch{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted);}
+    .nav-switch a{color:#a78bfa;text-decoration:none;font-weight:500;padding:6px 14px;border:1px solid var(--border);border-radius:8px;transition:all 0.2s;}
+    .nav-switch a:hover{background:var(--surface2);color:var(--text);}
+    .app{display:flex;min-height:calc(100vh - 64px);position:relative;z-index:1;}
+    .sidebar{width:230px;min-height:calc(100vh - 64px);background:var(--surface);border-right:1px solid var(--border);padding:2rem 1rem;display:flex;flex-direction:column;gap:4px;position:sticky;top:64px;height:calc(100vh - 64px);}
+    .sidebar-label{font-size:0.7rem;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0 0.75rem;margin:1rem 0 0.5rem;}
+    .sidebar-label:first-child{margin-top:0;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--muted);font-size:0.9rem;font-weight:500;transition:all 0.18s;border:none;background:none;width:100%;text-align:left;}
+    .nav-item:hover{background:var(--surface2);color:var(--text);}
+    .nav-item.active{background:rgba(34,211,165,0.12);color:var(--accent);}
+    .nav-item .icon{font-size:1.1rem;width:20px;text-align:center;}
+    .sidebar-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--border);}
+    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface2);margin-bottom:4px;}
+    .avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--blue));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0;}
+    .user-name{font-size:0.85rem;font-weight:600;color:var(--text);}
+    .user-role{font-size:0.72rem;color:var(--muted);}
+    .content{flex:1;padding:2.5rem;overflow-y:auto;}
+    .page{display:none;animation:fadeIn 0.3s ease;}
+    .page.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    h1{font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:0.35rem;}
+    h2{font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.2rem;}
+    .subtitle{color:var(--muted);font-size:0.95rem;margin-bottom:2rem;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.2rem;}
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.3rem 1.5rem;display:flex;flex-direction:column;gap:4px;}
+    .stat-label{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+    .stat-value{font-family:var(--font-display);font-size:2rem;font-weight:800;}
+    .stat-value.green{color:var(--accent);}.stat-value.blue{color:#a78bfa;}.stat-value.yellow{color:var(--yellow);}
+    .btn{padding:10px 20px;border-radius:10px;font-family:var(--font-body);font-size:0.88rem;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;display:inline-flex;align-items:center;gap:6px;}
+    .btn-primary{background:var(--accent);color:#0a0f0a;font-weight:700;}.btn-primary:hover{background:#2ee8b5;transform:translateY(-1px);box-shadow:0 4px 20px rgba(34,211,165,0.35);}
+    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);}.btn-outline:hover{background:var(--surface2);}
+    .btn-blue{background:rgba(108,99,255,0.15);color:#a78bfa;border:1px solid rgba(108,99,255,0.3);}.btn-blue:hover{background:rgba(108,99,255,0.25);}
+    .btn-sm{padding:6px 14px;font-size:0.82rem;}
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;}
+    .badge-green{background:rgba(34,211,165,0.15);color:var(--accent);}
+    .badge-blue{background:rgba(108,99,255,0.15);color:#a78bfa;}
+    .badge-yellow{background:rgba(251,191,36,0.15);color:var(--yellow);}
+    .badge-red{background:rgba(255,95,126,0.15);color:var(--red);}
+    .badge-purple{background:rgba(108,99,255,0.15);color:#a78bfa;}
+    .form-group{margin-bottom:1.2rem;}
+    label{display:block;font-size:0.82rem;font-weight:500;color:var(--muted);margin-bottom:6px;}
+    input,textarea,select{width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+    textarea{resize:vertical;min-height:90px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+    .search-bar{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 16px;margin-bottom:1.5rem;}
+    .search-bar input{background:none;border:none;flex:1;padding:0;font-size:0.92rem;}
+    .cand-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.3rem 1.5rem;margin-bottom:0.8rem;transition:border-color 0.2s;display:flex;gap:1rem;align-items:flex-start;}
+    .cand-card:hover{border-color:var(--accent);}
+    .cand-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#fff;}
+    .curriculo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:0.8rem;}
+    .login-wrap{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:2rem;}
+    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2.5rem 2rem;width:100%;max-width:440px;}
+    .login-logo{font-family:var(--font-display);font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:0.3rem;}
+    .login-logo span{color:var(--accent);}
+    .login-sub{text-align:center;color:var(--muted);font-size:0.88rem;margin-bottom:2rem;}
+    .tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:1.5rem;}
+    .tab{flex:1;text-align:center;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:500;color:var(--muted);transition:all 0.2s;border:none;background:none;}
+    .tab.active{background:var(--accent);color:#0a0f0a;font-weight:700;}
+    .tab-content{display:none;}.tab-content.active{display:block;}
+    .login-footer{text-align:center;margin-top:1.5rem;font-size:0.82rem;color:var(--muted);}
+    .login-footer a{color:#a78bfa;text-decoration:none;}
+    .alerta{border-radius:10px;padding:10px 14px;font-size:0.85rem;margin-bottom:1rem;display:none;}
+    .alerta-erro{background:rgba(255,95,126,0.1);border:1px solid rgba(255,95,126,0.3);color:var(--red);}
+    .alerta-ok{background:rgba(34,211,165,0.1);border:1px solid rgba(34,211,165,0.3);color:var(--accent);}
+    .notif{background:rgba(34,211,165,0.08);border:1px solid rgba(34,211,165,0.2);border-radius:12px;padding:12px 16px;margin-bottom:1rem;font-size:0.88rem;display:flex;align-items:center;gap:10px;}
+    .entrevista-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,211,165,0.12);color:var(--accent);border:1px solid rgba(34,211,165,0.25);padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;}
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;width:100%;max-width:480px;animation:fadeIn 0.2s ease;}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+    .modal-title{font-family:var(--font-display);font-size:1.2rem;font-weight:700;}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;}
+    .modal-close:hover{color:var(--text);}
+    .cv-section{margin-bottom:1.2rem;}
+    .cv-section-title{font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.6rem;}
+    .cv-field{display:flex;justify-content:space-between;font-size:0.88rem;padding:4px 0;border-bottom:1px solid var(--border);}
+    .cv-field:last-child{border-bottom:none;}
+    .cv-field-label{color:var(--muted);}
+    .cv-field-value{font-weight:500;text-align:right;max-width:60%;}
+    @media(max-width:768px){.sidebar{display:none;}.content{padding:1.5rem;}.form-row,.form-row-3{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
-
 <nav>
-  <a class="logo" href="index.html">Conecta<span>Talentos</span> <span class="logo-badge">EMPRESA</span></a>
+  <a class="logo" href="index.html">Conecta<span>Talentos</span><span class="logo-badge">EMPRESA</span></a>
   <div class="nav-switch">
     <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:0.82rem;">← Início</a>
     <span>É candidato?</span>
@@ -294,80 +111,56 @@
 </nav>
 
 <div class="app">
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar">
     <span class="sidebar-label">Menu</span>
-    <button class="nav-item" onclick="showPage('publicar')">
-      <span class="icon">📢</span> Publicar Vaga
-    </button>
-    <button class="nav-item" onclick="showPage('buscar')">
-      <span class="icon">🔍</span> Buscar Candidatos
-    </button>
-    <button class="nav-item" onclick="showPage('curriculos')">
-      <span class="icon">📥</span> Currículos Recebidos
-    </button>
+    <button class="nav-item active" onclick="showPage('login')"><span class="icon">🔑</span> Login / Cadastro</button>
+    <button class="nav-item" onclick="showPage('publicar')"><span class="icon">📢</span> Publicar Vaga</button>
+    <button class="nav-item" onclick="showPage('buscar')"><span class="icon">🔍</span> Buscar Candidatos</button>
+    <button class="nav-item" onclick="showPage('curriculos')"><span class="icon">📥</span> Currículos Recebidos</button>
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar" id="sidebar-avatar">?</div>
+        <div class="avatar" id="sb-avatar">?</div>
         <div>
-          <div class="user-name" id="sidebar-nome">Não logado</div>
+          <div class="user-name" id="sb-nome">Não logado</div>
           <div class="user-role">Conta Empresa</div>
         </div>
       </div>
-      <button class="nav-item" style="margin-top:8px;color:var(--red);" onclick="logout()">
-        <span class="icon">🚪</span> Sair
-      </button>
+      <button class="nav-item" style="color:var(--red);margin-top:4px;" onclick="logout()"><span class="icon">🚪</span> Sair</button>
     </div>
   </aside>
 
   <main class="content">
 
-    <!-- PAGE: LOGIN EMPRESA -->
+    <!-- LOGIN -->
     <div class="page active" id="page-login">
       <div class="login-wrap" style="min-height:auto;">
         <div class="login-box">
           <div class="login-logo">Conecta<span>Talentos</span></div>
           <div class="login-sub">Portal exclusivo para empresas recrutadoras 🏢</div>
-
-          <div id="login-erro" style="display:none;background:rgba(255,95,126,0.1);border:1px solid rgba(255,95,126,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:#ff5f7e;margin-bottom:1rem;"></div>
-          <div id="login-ok" style="display:none;background:rgba(34,211,165,0.1);border:1px solid rgba(34,211,165,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:var(--accent);margin-bottom:1rem;"></div>
-
+          <div class="alerta alerta-erro" id="msg-erro"></div>
+          <div class="alerta alerta-ok"   id="msg-ok"></div>
           <div class="tabs">
-            <button class="tab active" onclick="switchTab('emp-tab','entrar')">Entrar</button>
-            <button class="tab" onclick="switchTab('emp-tab','cadastrar')">Cadastrar Empresa</button>
+            <button class="tab active" onclick="switchTab('et','entrar')">Entrar</button>
+            <button class="tab"        onclick="switchTab('et','cadastrar')">Cadastrar Empresa</button>
           </div>
-
-          <!-- ENTRAR -->
-          <div class="tab-content active" id="emp-tab-entrar">
-            <div class="form-group"><label>E-mail corporativo</label><input type="email" id="login-email" placeholder="rh@suaempresa.com"/></div>
-            <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••"/></div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerLogin()">
-              Entrar como Empresa
-            </button>
+          <div class="tab-content active" id="et-entrar">
+            <div class="form-group"><label>E-mail corporativo</label><input id="l-email" type="email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input id="l-senha" type="password" placeholder="••••••••"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerLogin()">Entrar como Empresa</button>
           </div>
-
-          <!-- CADASTRAR -->
-          <div class="tab-content" id="emp-tab-cadastrar">
-            <div class="form-group"><label>Razão Social / Nome da Empresa</label><input type="text" id="cad-nome" placeholder="Ex: TechNova Ltda."/></div>
+          <div class="tab-content" id="et-cadastrar">
+            <div class="form-group"><label>Razão Social</label><input id="c-nome" type="text" placeholder="Ex: TechNova Ltda."/></div>
             <div class="form-row">
-              <div class="form-group"><label>CNPJ</label><input type="text" id="cad-cnpj" placeholder="00.000.000/0001-00"/></div>
+              <div class="form-group"><label>CNPJ</label><input id="c-cnpj" type="text" placeholder="00.000.000/0001-00"/></div>
               <div class="form-group"><label>Setor</label>
-                <select id="cad-setor">
-                  <option>Tecnologia</option>
-                  <option>Varejo</option>
-                  <option>Logística</option>
-                  <option>Saúde</option>
-                  <option>Educação</option>
-                </select>
+                <select id="c-setor"><option>Tecnologia</option><option>Varejo</option><option>Logística</option><option>Saúde</option><option>Educação</option></select>
               </div>
             </div>
-            <div class="form-group"><label>E-mail corporativo</label><input type="email" id="cad-email" placeholder="rh@suaempresa.com"/></div>
-            <div class="form-group"><label>Senha</label><input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres"/></div>
-            <div class="form-group"><label>Confirmar senha</label><input type="password" id="cad-senha2" placeholder="Repita a senha"/></div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerCadastro()">
-              Cadastrar Empresa
-            </button>
+            <div class="form-group"><label>E-mail corporativo</label><input id="c-email" type="email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input id="c-senha" type="password" placeholder="Mínimo 6 caracteres"/></div>
+            <div class="form-group"><label>Confirmar senha</label><input id="c-senha2" type="password" placeholder="Repita a senha"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerCadastro()">Cadastrar Empresa</button>
           </div>
-
           <div class="login-footer">
             É candidato? <a href="candidato.html">Acesse o portal de candidatos →</a><br/>
             <a href="index.html" style="color:var(--muted);font-size:0.8rem;">← Voltar para a página inicial</a>
@@ -376,473 +169,397 @@
       </div>
     </div>
 
-    <!-- PAGE: PUBLICAR VAGA -->
+    <!-- PUBLICAR VAGA -->
     <div class="page" id="page-publicar">
       <h1>Publicar Nova Vaga</h1>
       <p class="subtitle">Encontre os melhores jovens talentos para sua equipe.</p>
-
-      <div id="notif-vaga" style="display:none;" class="notif">
-        ✅ Vaga publicada com sucesso! Ela já está visível para os candidatos.
-      </div>
-
+      <div id="notif-vaga" style="display:none;" class="notif"></div>
       <div class="card">
         <h2>📋 Informações da Vaga</h2>
         <div class="form-row">
-          <div class="form-group"><label>Título da Vaga</label><input type="text" id="vaga-titulo" placeholder="Ex: Auxiliar de TI"/></div>
+          <div class="form-group"><label>Título da Vaga</label><input id="vaga-titulo" type="text" placeholder="Ex: Auxiliar de TI"/></div>
           <div class="form-group"><label>Tipo de Contrato</label>
-            <select id="vaga-tipo">
-              <option>Estágio</option>
-              <option>Jovem Aprendiz</option>
-              <option>CLT Júnior</option>
-              <option>Freelance</option>
-            </select>
+            <select id="vaga-tipo"><option>Estágio</option><option>Jovem Aprendiz</option><option>CLT Júnior</option><option>Freelance</option></select>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Localidade</label><input type="text" id="vaga-local" placeholder="Ex: São Paulo, SP"/></div>
+          <div class="form-group"><label>Localidade</label><input id="vaga-local" type="text" placeholder="Ex: São Paulo, SP"/></div>
           <div class="form-group"><label>Modalidade</label>
-            <select id="vaga-modalidade">
-              <option>Presencial</option>
-              <option>Remoto</option>
-              <option>Híbrido</option>
-            </select>
+            <select id="vaga-modalidade"><option>Presencial</option><option>Remoto</option><option>Híbrido</option></select>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Salário / Bolsa (opcional)</label><input type="text" id="vaga-salario" placeholder="Ex: R$ 800,00 / mês"/></div>
-          <div class="form-group"><label>Carga Horária</label><input type="text" id="vaga-carga" placeholder="Ex: 30h semanais"/></div>
+          <div class="form-group"><label>Salário / Bolsa</label><input id="vaga-salario" type="text" placeholder="Ex: R$ 800/mês"/></div>
+          <div class="form-group"><label>Carga Horária</label><input id="vaga-carga" type="text" placeholder="Ex: 30h semanais"/></div>
         </div>
-        <div class="form-group"><label>Descrição da vaga</label>
-          <textarea id="vaga-descricao" placeholder="Descreva as atividades, requisitos e benefícios..."></textarea>
-        </div>
+        <div class="form-group"><label>Descrição</label><textarea id="vaga-descricao" placeholder="Descreva as atividades e requisitos..."></textarea></div>
       </div>
-
       <div class="card">
-        <h2>🏷️ Palavras-chave / Habilidades Buscadas</h2>
-        <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Essas palavras são usadas para encontrar candidatos compatíveis automaticamente.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;" id="kw-box">
-        </div>
+        <h2>🏷️ Palavras-chave</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;" id="kw-box"></div>
         <div style="display:flex;gap:8px;">
-          <input type="text" id="new-kw" placeholder="Ex: Excel, Atendimento, Inglês..."/>
-          <button class="btn btn-outline btn-sm" onclick="addKeyword()">+ Adicionar</button>
+          <input type="text" id="new-kw" placeholder="Ex: Excel, Atendimento..."/>
+          <button class="btn btn-outline btn-sm" onclick="addKw()">+ Adicionar</button>
         </div>
       </div>
-
       <div style="display:flex;gap:10px;justify-content:flex-end;">
-        <button class="btn btn-outline">Salvar Rascunho</button>
+        <button class="btn btn-outline" onclick="limparForm()">Limpar</button>
         <button class="btn btn-primary" onclick="publicarVaga()">📢 Publicar Vaga</button>
       </div>
     </div>
 
-    <!-- PAGE: BUSCAR CANDIDATOS -->
+    <!-- BUSCAR CANDIDATOS -->
     <div class="page" id="page-buscar">
       <h1>Buscar Candidatos</h1>
       <p class="subtitle">Encontre jovens talentos por habilidades, escolaridade ou localização.</p>
-
       <div class="card" style="margin-bottom:1.5rem;">
         <div class="form-row-3">
-          <div class="form-group" style="margin:0;"><label>Habilidade / Palavra-chave</label><input type="text" placeholder="Ex: Excel, Python, Canva..." id="busca-input"/></div>
+          <div class="form-group" style="margin:0;"><label>Habilidade / Palavra-chave</label><input id="busca-cand" type="text" placeholder="Ex: Excel, Python..."/></div>
           <div class="form-group" style="margin:0;"><label>Escolaridade</label>
-            <select>
-              <option value="">Qualquer nível</option>
-              <option>Ensino Médio</option>
-              <option>Ensino Técnico</option>
-              <option>Ensino Superior</option>
-            </select>
+            <select id="busca-nivel"><option value="">Qualquer nível</option><option>Ensino Médio Completo</option><option>Ensino Técnico em andamento</option><option>Ensino Superior em andamento</option></select>
           </div>
-          <div class="form-group" style="margin:0;"><label>Cidade</label><input type="text" placeholder="Ex: São Paulo"/></div>
+          <div class="form-group" style="margin:0;"><label>Cidade</label><input id="busca-cidade" type="text" placeholder="Ex: São Paulo"/></div>
         </div>
         <div style="margin-top:1rem;display:flex;justify-content:flex-end;">
-          <button class="btn btn-primary" onclick="buscar()">🔍 Buscar Candidatos</button>
+          <button class="btn btn-primary" onclick="buscarCandidatos()">🔍 Buscar</button>
         </div>
       </div>
-
       <div id="resultado-busca">
         <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
-          <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
-          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum candidato encontrado</p>
-          <p style="color:var(--muted);font-size:0.88rem;">Use os filtros acima para buscar candidatos cadastrados.</p>
+          <p style="font-size:2rem;">🔍</p>
+          <p style="font-weight:600;margin-top:0.5rem;">Use os filtros acima para buscar candidatos</p>
         </div>
       </div>
     </div>
 
-    <!-- PAGE: CURRICULOS RECEBIDOS -->
+    <!-- CURRÍCULOS RECEBIDOS -->
     <div class="page" id="page-curriculos">
       <h1>Currículos Recebidos</h1>
       <p class="subtitle">Candidatos que se inscreveram nas suas vagas.</p>
-
       <div class="card-grid">
-        <div class="stat-card"><span class="stat-label">Total recebidos</span><span class="stat-value green" id="total-curric">0</span></div>
-        <div class="stat-card"><span class="stat-label">Não avaliados</span><span class="stat-value yellow">0</span></div>
-        <div class="stat-card"><span class="stat-label">Convidados</span><span class="stat-value blue" id="total-convidados">0</span></div>
+        <div class="stat-card"><span class="stat-label">Total recebidos</span><span class="stat-value green" id="st-total">0</span></div>
+        <div class="stat-card"><span class="stat-label">Não avaliados</span><span class="stat-value yellow" id="st-novos">0</span></div>
+        <div class="stat-card"><span class="stat-label">Entrevistas</span><span class="stat-value blue" id="st-entrev">0</span></div>
       </div>
-
-      <div id="lista-curriculos">
-        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
-          <p style="font-size:2rem;margin-bottom:0.5rem;">📥</p>
-          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum currículo recebido ainda</p>
-          <p style="color:var(--muted);font-size:0.88rem;">Os candidatos que se inscreverem nas suas vagas aparecerão aqui.</p>
-        </div>
-      </div>
+      <div id="lista-curriculos"></div>
     </div>
 
   </main>
 </div>
 
-<!-- MODAL: AGENDAR ENTREVISTA -->
+<!-- MODAL ENTREVISTA -->
 <div class="modal-overlay" id="modal-entrevista">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">📅 Agendar Entrevista</div>
       <button class="modal-close" onclick="fecharModal('modal-entrevista')">×</button>
     </div>
-    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.2rem;">Candidato: <strong id="modal-nome-cand" style="color:var(--text);"></strong></p>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.2rem;">Candidato: <strong id="modal-cand-nome" style="color:var(--text);"></strong></p>
     <div class="form-row">
-      <div class="form-group"><label>Data da entrevista</label><input type="date" id="entrevista-data"/></div>
-      <div class="form-group"><label>Horário</label><input type="time" id="entrevista-hora"/></div>
+      <div class="form-group"><label>Data</label><input type="date" id="ent-data"/></div>
+      <div class="form-group"><label>Horário</label><input type="time" id="ent-hora"/></div>
     </div>
     <div class="form-group"><label>Formato</label>
-      <select id="entrevista-formato">
-        <option>Presencial</option>
-        <option>Online (Google Meet)</option>
-        <option>Online (Zoom)</option>
-        <option>Online (Teams)</option>
-        <option>Por telefone</option>
-      </select>
+      <select id="ent-formato"><option>Presencial</option><option>Online (Google Meet)</option><option>Online (Zoom)</option><option>Por telefone</option></select>
     </div>
-    <div class="form-group"><label>Local / Link</label><input type="text" id="entrevista-local" placeholder="Ex: Rua das Flores, 123 — ou cole o link da reunião"/></div>
-    <div class="form-group"><label>Observações (opcional)</label><textarea id="entrevista-obs" placeholder="Ex: Trazer RG e comprovante de escolaridade..." style="min-height:70px;"></textarea></div>
+    <div class="form-group"><label>Local / Link</label><input type="text" id="ent-local" placeholder="Endereço ou link da reunião"/></div>
+    <div class="form-group"><label>Observações</label><textarea id="ent-obs" placeholder="Ex: Trazer RG..." style="min-height:70px;"></textarea></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:0.5rem;">
       <button class="btn btn-outline" onclick="fecharModal('modal-entrevista')">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmarEntrevista()">✅ Confirmar Agendamento</button>
+      <button class="btn btn-primary" onclick="confirmarEntrevista()">✅ Confirmar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: VER CURRÍCULO -->
+<!-- MODAL CURRÍCULO -->
 <div class="modal-overlay" id="modal-curriculo">
   <div class="modal" style="max-width:540px;">
     <div class="modal-header">
       <div class="modal-title">📄 Currículo do Candidato</div>
       <button class="modal-close" onclick="fecharModal('modal-curriculo')">×</button>
     </div>
-    <div id="modal-cv-content">
-      <div style="text-align:center;padding:2rem;color:var(--muted);">Carregando currículo...</div>
-    </div>
+    <div id="modal-cv-content"></div>
   </div>
 </div>
 
 <script>
-  // ─── AUTH ────────────────────────────────────────────────────────
-  function getEmpresas()  { return LS.get('ct_usuarios_emp', []); }
-  function getLogado()    { return LS.get('ct_logado_emp', null); }
+const LS={get:(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 
-  function mostrarErro(msg) { const el=document.getElementById('login-erro'); el.textContent=msg; el.style.display='block'; document.getElementById('login-ok').style.display='none'; }
-  function mostrarOk(msg)   { const el=document.getElementById('login-ok');   el.textContent=msg; el.style.display='block'; document.getElementById('login-erro').style.display='none'; }
-  function limparMsg()      { document.getElementById('login-erro').style.display='none'; document.getElementById('login-ok').style.display='none'; }
+// ── EMPRESAS PREDEFINIDAS ─────────────────────────────────────────
+const EMPRESAS_DEFAULT = [
+  {nome:'TechSolutions Ltda.',cnpj:'12.345.678/0001-90',setor:'Tecnologia',email:'rh@techsolutions.com',senha:'123456'},
+  {nome:'Grupo Nexus S.A.',cnpj:'98.765.432/0001-10',setor:'Varejo',email:'rh@gruponexus.com',senha:'123456'},
+  {nome:'Criativa Agency',cnpj:'11.222.333/0001-44',setor:'Educação',email:'rh@criativa.com',senha:'123456'},
+  {nome:'Fast Log Brasil',cnpj:'55.666.777/0001-88',setor:'Logística',email:'rh@fastlog.com',senha:'123456'},
+  {nome:'Saúde Total',cnpj:'33.444.555/0001-66',setor:'Saúde',email:'rh@saudetotal.com',senha:'123456'},
+];
 
-  function fazerCadastro() {
-    limparMsg();
-    const nome  = document.getElementById('cad-nome').value.trim();
-    const cnpj  = document.getElementById('cad-cnpj').value.trim();
-    const setor = document.getElementById('cad-setor').value;
-    const email = document.getElementById('cad-email').value.trim().toLowerCase();
-    const senha = document.getElementById('cad-senha').value;
-    const senha2= document.getElementById('cad-senha2').value;
+function initDados() {
+  if(!LS.get('ct_users_emp')) LS.set('ct_users_emp', EMPRESAS_DEFAULT);
+}
 
-    if (!nome || !email || !senha) { mostrarErro('Preencha todos os campos obrigatórios.'); return; }
-    if (senha.length < 6)          { mostrarErro('A senha deve ter pelo menos 6 caracteres.'); return; }
-    if (senha !== senha2)          { mostrarErro('As senhas não coincidem.'); return; }
+// ── AUTH ──────────────────────────────────────────────────────────
+function msg(tipo,texto){
+  ['msg-erro','msg-ok'].forEach(id=>document.getElementById(id).style.display='none');
+  if(!tipo) return;
+  const el=document.getElementById(tipo==='erro'?'msg-erro':'msg-ok');
+  el.textContent=texto;el.style.display='block';
+}
 
-    const empresas = getEmpresas();
-    if (empresas.find(e => e.email === email)) { mostrarErro('Este e-mail já está cadastrado. Faça login.'); return; }
+function switchTab(g,t){
+  document.querySelectorAll(`[id^="${g}-"]`).forEach(el=>el.classList.remove('active'));
+  document.getElementById(`${g}-${t}`).classList.add('active');
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(t==='entrar'&&i===0)||(t==='cadastrar'&&i===1)));
+  msg(null);
+}
 
-    empresas.push({ nome, cnpj, setor, email, senha });
-    LS.set('ct_usuarios_emp', empresas);
-    LS.set('ct_logado_emp', { nome, email });
+function fazerCadastro(){
+  msg(null);
+  const nome=document.getElementById('c-nome').value.trim();
+  const email=document.getElementById('c-email').value.trim().toLowerCase();
+  const senha=document.getElementById('c-senha').value;
+  const senha2=document.getElementById('c-senha2').value;
+  const cnpj=document.getElementById('c-cnpj').value.trim();
+  const setor=document.getElementById('c-setor').value;
+  if(!nome||!email||!senha){msg('erro','Preencha todos os campos.');return;}
+  if(senha.length<6){msg('erro','Senha mínimo 6 caracteres.');return;}
+  if(senha!==senha2){msg('erro','As senhas não coincidem.');return;}
+  const emps=LS.get('ct_users_emp',[]);
+  if(emps.find(e=>e.email===email)){msg('erro','E-mail já cadastrado. Faça login.');return;}
+  emps.push({nome,email,senha,cnpj,setor});
+  LS.set('ct_users_emp',emps);
+  LS.set('ct_session_emp',{nome,email});
+  msg('ok',`Empresa cadastrada! Bem-vindo(a), ${nome}! 🎉`);
+  setTimeout(()=>entrar(nome),1200);
+}
 
-    mostrarOk(`Empresa cadastrada com sucesso! Bem-vindo(a), ${nome}! 🎉`);
-    setTimeout(() => entrarNoApp(nome), 1000);
+function fazerLogin(){
+  msg(null);
+  const email=document.getElementById('l-email').value.trim().toLowerCase();
+  const senha=document.getElementById('l-senha').value;
+  if(!email||!senha){msg('erro','Preencha e-mail e senha.');return;}
+  const e=LS.get('ct_users_emp',[]).find(e=>e.email===email&&e.senha===senha);
+  if(!e){msg('erro','E-mail ou senha incorretos.');return;}
+  LS.set('ct_session_emp',{nome:e.nome,email:e.email});
+  entrar(e.nome);
+}
+
+function entrar(nome){
+  const init=nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('sb-nome').textContent=nome;
+  document.getElementById('sb-avatar').textContent=init;
+  showPage('publicar');
+}
+
+function logout(){
+  if(!confirm('Deseja sair?')) return;
+  LS.set('ct_session_emp',null);
+  document.getElementById('sb-nome').textContent='Não logado';
+  document.getElementById('sb-avatar').textContent='?';
+  msg(null);
+  document.getElementById('l-email').value='';
+  document.getElementById('l-senha').value='';
+  showPage('login');
+}
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────────
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const idx={login:0,publicar:1,buscar:2,curriculos:3};
+  const items=document.querySelectorAll('.nav-item');
+  if(idx[name]!==undefined) items[idx[name]].classList.add('active');
+  if(name==='curriculos') renderCurriculos();
+}
+
+// ── PUBLICAR VAGA ─────────────────────────────────────────────────
+function addKw(){const el=document.getElementById('new-kw');const v=el.value.trim();if(!v)return;const b=document.createElement('span');b.className='badge badge-green';b.style.cursor='pointer';b.title='Clique para remover';b.textContent=v;b.onclick=()=>b.remove();document.getElementById('kw-box').appendChild(b);el.value='';}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement.id==='new-kw')addKw();});
+
+function limparForm(){
+  ['vaga-titulo','vaga-local','vaga-salario','vaga-carga','vaga-descricao'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('kw-box').innerHTML='';
+}
+
+function publicarVaga(){
+  const titulo=document.getElementById('vaga-titulo').value.trim();
+  if(!titulo){alert('Preencha o título da vaga.');return;}
+  const sess=LS.get('ct_session_emp');
+  const vagas=LS.get('ct_vagas',[]);
+  vagas.unshift({
+    id:Date.now(),
+    titulo,
+    empresa:sess?.nome||'Empresa',
+    tipo:document.getElementById('vaga-tipo').value,
+    local:document.getElementById('vaga-local').value.trim(),
+    modalidade:document.getElementById('vaga-modalidade').value,
+    salario:document.getElementById('vaga-salario').value.trim(),
+    carga:document.getElementById('vaga-carga').value.trim(),
+    descricao:document.getElementById('vaga-descricao').value.trim(),
+    keywords:[...document.querySelectorAll('#kw-box .badge')].map(b=>b.textContent.trim()),
+    data:new Date().toLocaleDateString('pt-BR')
+  });
+  LS.set('ct_vagas',vagas);
+  const notif=document.getElementById('notif-vaga');
+  notif.textContent=`✅ Vaga "${titulo}" publicada! Já está visível para os candidatos.`;
+  notif.style.display='flex';
+  setTimeout(()=>notif.style.display='none',4000);
+  limparForm();
+}
+
+// ── BUSCAR CANDIDATOS ─────────────────────────────────────────────
+function buscarCandidatos(){
+  const busca=document.getElementById('busca-cand').value.trim().toLowerCase();
+  const nivel=document.getElementById('busca-nivel').value;
+  const cidade=document.getElementById('busca-cidade').value.trim().toLowerCase();
+  const cands=LS.get('ct_users_cand',[]);
+  const res=cands.filter(c=>{
+    const skillsOk=!busca||(c.skills||[]).some(s=>s.toLowerCase().includes(busca))||c.nome.toLowerCase().includes(busca);
+    const nivelOk=!nivel||c.nivel===nivel;
+    const cidadeOk=!cidade||(c.cidade||'').toLowerCase().includes(cidade);
+    return skillsOk&&nivelOk&&cidadeOk;
+  });
+  const box=document.getElementById('resultado-busca');
+  if(!res.length){
+    box.innerHTML=`<div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;"><p style="font-size:2rem;">🔍</p><p style="font-weight:600;margin-top:0.5rem;">Nenhum candidato encontrado</p><p style="color:var(--muted);font-size:0.88rem;margin-top:4px;">Tente outros filtros.</p></div>`;
+    return;
   }
+  const cores=['linear-gradient(135deg,#6c63ff,#22d3a5)','linear-gradient(135deg,#fbbf24,#f97316)','linear-gradient(135deg,#22d3a5,#3b82f6)','linear-gradient(135deg,#ec4899,#8b5cf6)','linear-gradient(135deg,#10b981,#06b6d4)'];
+  box.innerHTML=res.map((c,i)=>{
+    const tags=(c.skills||[]).map(s=>`<span class="badge badge-green">${s}</span>`).join('');
+    return `<div class="cand-card">
+      <div class="cand-avatar" style="background:${cores[i%cores.length]};">${c.nome[0]}</div>
+      <div style="flex:1;">
+        <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:2px;">${c.nome}</div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">${c.nivel||'—'} · ${c.cidade||'—'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">${tags||'<span style="font-size:0.82rem;color:var(--muted);">Sem habilidades cadastradas</span>'}</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="abrirEntrevista(${JSON.stringify(c.nome)},${JSON.stringify(c.email)},this)">📅 Agendar Entrevista</button>
+          <button class="btn btn-outline btn-sm" onclick="verCurriculo(${JSON.stringify(c.email)})">👁️ Ver Currículo</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
-  function fazerLogin() {
-    limparMsg();
-    const email = document.getElementById('login-email').value.trim().toLowerCase();
-    const senha = document.getElementById('login-senha').value;
+// ── CURRÍCULOS RECEBIDOS ──────────────────────────────────────────
+function renderCurriculos(){
+  const cands_raw=LS.get('ct_candidaturas',[]);
+  const users=LS.get('ct_users_cand',[]);
+  const entrevs=LS.get('ct_entrevistas',[]);
+  const lista=document.getElementById('lista-curriculos');
 
-    if (!email || !senha) { mostrarErro('Preencha e-mail e senha.'); return; }
-
-    const empresas = getEmpresas();
-    const empresa = empresas.find(e => e.email === email && e.senha === senha);
-    if (!empresa) { mostrarErro('E-mail ou senha incorretos.'); return; }
-
-    LS.set('ct_logado_emp', { nome: empresa.nome, email: empresa.email });
-    entrarNoApp(empresa.nome);
-  }
-
-  function entrarNoApp(nome) {
-    const initials = nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
-    document.getElementById('sidebar-nome').textContent = nome;
-    document.getElementById('sidebar-avatar').textContent = initials;
-    showPage('publicar');
-  }
-
-  function logout() {
-    if (!confirm('Deseja sair da conta da empresa?')) return;
-    LS.set('ct_logado_emp', null);
-    document.getElementById('sidebar-nome').textContent = 'Não logado';
-    document.getElementById('sidebar-avatar').textContent = '?';
-    limparMsg();
-    document.getElementById('login-email').value = '';
-    document.getElementById('login-senha').value = '';
-    showPage('login');
-  }
-
-  function verificarLogin() {
-    const logado = getLogado();
-    if (logado) entrarNoApp(logado.nome);
-  }
-
-  // ─── LS HELPERS ─────────────────────────────────────────────────
-  const LS = {
-    get: (k, fb=null) => { try { const v=localStorage.getItem(k); return v!==null?JSON.parse(v):fb; } catch { return fb; } },
-    set: (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} }
-  };
-
-  // ─── NAV ────────────────────────────────────────────────────────
-  function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    const map = { login: 0, publicar: 1, buscar: 2, curriculos: 3 };
-    const items = document.querySelectorAll('.nav-item');
-    if (map[name] !== undefined) items[map[name]].classList.add('active');
-    if (name === 'curriculos') renderCurriculos();
-  }
-
-  function switchTab(group, tab) {
-    document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
-    document.getElementById(`${group}-${tab}`).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-  }
-
-  // ─── KEYWORDS ───────────────────────────────────────────────────
-  function addKeyword() {
-    const input = document.getElementById('new-kw');
-    const val = input.value.trim();
-    if (!val) return;
-    const box = document.getElementById('kw-box');
-    const badge = document.createElement('span');
-    badge.className = 'badge badge-green';
-    badge.textContent = val;
-    box.appendChild(badge);
-    input.value = '';
-  }
-
-  // ─── PUBLICAR VAGA ──────────────────────────────────────────────
-  function publicarVaga() {
-    const titulo = document.getElementById('vaga-titulo').value.trim();
-    const tipo = document.getElementById('vaga-tipo').value;
-    const local = document.getElementById('vaga-local').value.trim();
-    const modalidade = document.getElementById('vaga-modalidade').value;
-    const salario = document.getElementById('vaga-salario').value.trim();
-    const carga = document.getElementById('vaga-carga').value.trim();
-    const descricao = document.getElementById('vaga-descricao').value.trim();
-    const keywords = [...document.querySelectorAll('#kw-box .badge')].map(b => b.textContent.trim());
-
-    if (!titulo) { alert('Por favor, preencha o título da vaga.'); return; }
-
-    const vagas = LS.get('ct_vagas', []);
-    vagas.unshift({
-      id: Date.now(),
-      titulo, tipo, local, modalidade, salario, carga, descricao, keywords,
-      data: new Date().toLocaleDateString('pt-BR')
-    });
-    LS.set('ct_vagas', vagas);
-
-    const notif = document.getElementById('notif-vaga');
-    notif.style.display = 'flex';
-    notif.textContent = `✅ Vaga "${titulo}" publicada com sucesso! Já está visível para os candidatos.`;
-    setTimeout(() => { notif.style.display = 'none'; }, 4000);
-
-    // Limpa o formulário
-    document.getElementById('vaga-titulo').value = '';
-    document.getElementById('vaga-local').value = '';
-    document.getElementById('vaga-salario').value = '';
-    document.getElementById('vaga-carga').value = '';
-    document.getElementById('vaga-descricao').value = '';
-    document.getElementById('kw-box').innerHTML = '';
-  }
-
-  // ─── BUSCAR ─────────────────────────────────────────────────────
-  function buscar() {
-    const box = document.getElementById('resultado-busca');
-    box.style.opacity = '0.4';
-    setTimeout(() => { box.style.opacity = '1'; }, 500);
-  }
-
-  // ─── MODAL HELPERS ──────────────────────────────────────────────
-  let _candAtual = null;
-  let _btnAtual = null;
-
-  function abrirModal(id) { document.getElementById(id).classList.add('open'); }
-  function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
-
-  // Fecha modal clicando fora
-  document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+  // busca dados completos de cada candidato
+  const itens=cands_raw.map(c=>{
+    const u=users.find(u=>u.nome===c.vaga||u.email===c.email)||{nome:c.vaga,skills:[]};
+    return {...c,...u};
   });
 
-  // ─── AGENDAR ENTREVISTA ─────────────────────────────────────────
-  function abrirEntrevista(nome, card) {
-    _candAtual = nome;
-    _btnAtual = card;
-    document.getElementById('modal-nome-cand').textContent = nome;
-    document.getElementById('entrevista-data').value = '';
-    document.getElementById('entrevista-hora').value = '';
-    document.getElementById('entrevista-local').value = '';
-    document.getElementById('entrevista-obs').value = '';
-    abrirModal('modal-entrevista');
+  document.getElementById('st-total').textContent=itens.length;
+  const comE=itens.filter(c=>entrevs.find(e=>e.vagaId===c.vagaId));
+  document.getElementById('st-entrev').textContent=comE.length;
+  document.getElementById('st-novos').textContent=itens.length-comE.length;
+
+  if(!itens.length){
+    lista.innerHTML=`<div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;"><p style="font-size:2rem;">📥</p><p style="font-weight:600;margin-top:0.5rem;">Nenhum currículo recebido ainda</p><p style="color:var(--muted);font-size:0.88rem;margin-top:4px;">Quando candidatos se inscreverem nas vagas, aparecerão aqui.</p></div>`;
+    return;
   }
 
-  function confirmarEntrevista() {
-    const data = document.getElementById('entrevista-data').value;
-    const hora = document.getElementById('entrevista-hora').value;
-    const formato = document.getElementById('entrevista-formato').value;
-    const local = document.getElementById('entrevista-local').value;
-    const obs = document.getElementById('entrevista-obs').value;
+  lista.innerHTML=itens.map((c,i)=>{
+    const e=entrevs.find(ev=>ev.vagaId===c.vagaId);
+    const badge=e?`<span class="badge badge-green">Entrevista agendada</span>`:`<span class="badge badge-yellow">Novo</span>`;
+    const entrevInfo=e?`<div class="entrevista-badge" style="margin-top:8px;display:inline-flex;">📅 ${e.data} às ${e.hora} — ${e.formato}</div>`:'';
+    const btnLabel=e?'✏️ Reagendar':'📅 Agendar Entrevista';
+    return `<div class="curriculo-card" ${e?'style="border-color:rgba(34,211,165,0.4);"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;">${c.vaga}</div>
+          <div style="font-size:0.82rem;color:var(--muted);">📌 Candidatou-se em ${c.data}</div>
+        </div>${badge}
+      </div>
+      ${c.sobre?`<p style="font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:8px;">${c.sobre}</p>`:''}
+      ${(c.skills||[]).length?`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">${(c.skills||[]).map(s=>`<span class="badge badge-blue">${s}</span>`).join('')}</div>`:''}
+      ${entrevInfo}
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="verCurriculo(${JSON.stringify(c.email||'')})">👁️ Ver Currículo</button>
+        <button class="btn btn-primary btn-sm" id="btn-ent-${i}" onclick="abrirEntrevista(${JSON.stringify(c.vaga)},${JSON.stringify(c.email||'')},document.getElementById('btn-ent-${i}'))">${btnLabel}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 
-    if (!data || !hora) { alert('Por favor, preencha a data e o horário.'); return; }
+// ── MODAL ENTREVISTA ──────────────────────────────────────────────
+let _candNome=null,_candEmail=null,_candVagaId=null,_btnAtual=null;
 
-    const [ano, mes, dia] = data.split('-');
-    const dataFormatada = `${dia}/${mes}/${ano}`;
+function abrirEntrevista(nome,email,btn){
+  _candNome=nome;_candEmail=email;_btnAtual=btn;
+  document.getElementById('modal-cand-nome').textContent=nome;
+  ['ent-data','ent-hora','ent-local','ent-obs'].forEach(id=>document.getElementById(id).value='');
+  abrirModal('modal-entrevista');
+}
 
-    // Salva no localStorage para o candidato ver
-    const entrevistas = LS.get('ct_entrevistas', []);
-    entrevistas.push({ nome: _candAtual, data: dataFormatada, hora, formato, local, obs, agendadoEm: new Date().toLocaleDateString('pt-BR') });
-    LS.set('ct_entrevistas', entrevistas);
+function confirmarEntrevista(){
+  const data=document.getElementById('ent-data').value;
+  const hora=document.getElementById('ent-hora').value;
+  if(!data||!hora){alert('Preencha data e horário.');return;}
+  const [a,m,d]=data.split('-');
+  const dataFmt=`${d}/${m}/${a}`;
+  const entrevs=LS.get('ct_entrevistas',[]);
+  // remove entrevista anterior do mesmo candidato se houver
+  const idx=entrevs.findIndex(e=>e.candNome===_candNome);
+  if(idx>=0) entrevs.splice(idx,1);
+  entrevs.push({
+    candNome:_candNome,vaga:_candNome,vagaId:_candVagaId,
+    data:dataFmt,hora,
+    formato:document.getElementById('ent-formato').value,
+    local:document.getElementById('ent-local').value,
+    obs:document.getElementById('ent-obs').value
+  });
+  LS.set('ct_entrevistas',entrevs);
+  fecharModal('modal-entrevista');
+  if(_btnAtual){_btnAtual.textContent='✏️ Reagendar';_btnAtual.style.background='rgba(34,211,165,0.15)';_btnAtual.style.color='var(--accent)';_btnAtual.style.border='1px solid rgba(34,211,165,0.3)';}
+  alert(`✅ Entrevista com ${_candNome} agendada para ${dataFmt} às ${hora}!`);
+}
 
-    // Atualiza o card na lista de currículos
-    if (_btnAtual) {
-      const card = _btnAtual.closest('.curriculo-card');
-      if (card) {
-        const footer = card.querySelector('.curriculo-footer');
-        const existing = card.querySelector('.entrevista-badge');
-        if (existing) existing.remove();
-        const badge = document.createElement('div');
-        badge.className = 'entrevista-badge';
-        badge.style.marginTop = '8px';
-        badge.innerHTML = `📅 Entrevista: ${dataFormatada} às ${hora} — ${formato}`;
-        footer.before(badge);
-        const btn = _btnAtual;
-        btn.textContent = '✏️ Reagendar';
-        btn.style.background = 'rgba(34,211,165,0.15)';
-        btn.style.color = 'var(--accent)';
-        btn.style.border = '1px solid rgba(34,211,165,0.3)';
-        const statusBadge = card.querySelector('.badge');
-        if (statusBadge) { statusBadge.className = 'badge badge-green'; statusBadge.textContent = 'Entrevista agendada'; }
-      }
-    }
-
-    fecharModal('modal-entrevista');
-    const notif = document.createElement('div');
-    notif.className = 'notif';
-    notif.style.marginBottom = '1rem';
-    notif.textContent = `✅ Entrevista agendada com ${_candAtual} para ${dataFormatada} às ${hora}!`;
-    document.querySelector('#page-curriculos .content-inner, #page-curriculos')?.prepend(notif);
-    setTimeout(() => notif.remove(), 4000);
+// ── MODAL CURRÍCULO ───────────────────────────────────────────────
+function verCurriculo(email){
+  const users=LS.get('ct_users_cand',[]);
+  const u=users.find(u=>u.email===email);
+  const el=document.getElementById('modal-cv-content');
+  if(!u||!u.nome){
+    el.innerHTML=`<div style="text-align:center;padding:2rem;"><p style="font-size:2rem;">📄</p><p style="font-weight:600;margin-top:0.5rem;">Currículo não disponível</p><p style="color:var(--muted);font-size:0.88rem;margin-top:4px;">O candidato não preencheu o currículo digital.</p></div>`;
+  } else {
+    const skills=(u.skills||[]).map(s=>`<span class="badge badge-blue" style="font-size:0.75rem;">${s}</span>`).join('');
+    el.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6c63ff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:#fff;">${u.nome[0]}</div>
+        <div><div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">${u.nome}</div><div style="font-size:0.83rem;color:var(--muted);">${u.cidade||'—'}</div></div>
+      </div>
+      <div class="cv-section"><div class="cv-section-title">Contato</div>
+        <div class="cv-field"><span class="cv-field-label">E-mail</span><span class="cv-field-value">${u.email||'—'}</span></div>
+        <div class="cv-field"><span class="cv-field-label">Telefone</span><span class="cv-field-value">${u.tel||'—'}</span></div>
+      </div>
+      <div class="cv-section"><div class="cv-section-title">Escolaridade</div>
+        <div class="cv-field"><span class="cv-field-label">Nível</span><span class="cv-field-value">${u.nivel||'—'}</span></div>
+        <div class="cv-field"><span class="cv-field-label">Instituição</span><span class="cv-field-value">${u.inst||'—'}</span></div>
+        <div class="cv-field"><span class="cv-field-label">Curso</span><span class="cv-field-value">${u.curso||'—'}</span></div>
+      </div>
+      ${u.sobre?`<div class="cv-section"><div class="cv-section-title">Sobre</div><p style="font-size:0.88rem;color:var(--muted);line-height:1.6;">${u.sobre}</p></div>`:''}
+      ${skills?`<div class="cv-section"><div class="cv-section-title">Habilidades</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${skills}</div></div>`:''}`;
   }
+  abrirModal('modal-curriculo');
+}
 
-  // ─── VER CURRÍCULO ──────────────────────────────────────────────
-  function verCurriculo(nome) {
-    const cv = LS.get('ct_curriculo');
-    const content = document.getElementById('modal-cv-content');
+function abrirModal(id){document.getElementById(id).classList.add('open');}
+function fecharModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-    if (!cv || !cv.nome) {
-      content.innerHTML = `
-        <div style="text-align:center;padding:2rem;">
-          <p style="font-size:2rem;margin-bottom:0.5rem;">📄</p>
-          <p style="font-weight:600;margin-bottom:0.4rem;">Currículo não disponível</p>
-          <p style="color:var(--muted);font-size:0.88rem;">O candidato ainda não preencheu o currículo digital.</p>
-        </div>`;
-    } else {
-      const skills = (cv.skills || []).map(s => `<span class="badge badge-blue" style="font-size:0.75rem;">${s}</span>`).join('');
-      content.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
-          <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6c63ff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">${(cv.nome||'?')[0].toUpperCase()}</div>
-          <div>
-            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">${cv.nome||'—'}</div>
-            <div style="font-size:0.83rem;color:var(--muted);">${cv.cidade||'—'}</div>
-          </div>
-        </div>
-        <div class="cv-section">
-          <div class="cv-section-title">Contato</div>
-          <div class="cv-field"><span class="cv-field-label">E-mail</span><span class="cv-field-value">${cv.email||'—'}</span></div>
-          <div class="cv-field"><span class="cv-field-label">Telefone</span><span class="cv-field-value">${cv.telefone||'—'}</span></div>
-        </div>
-        <div class="cv-section">
-          <div class="cv-section-title">Escolaridade</div>
-          <div class="cv-field"><span class="cv-field-label">Nível</span><span class="cv-field-value">${cv.nivel||'—'}</span></div>
-          <div class="cv-field"><span class="cv-field-label">Instituição</span><span class="cv-field-value">${cv.instituicao||'—'}</span></div>
-          <div class="cv-field"><span class="cv-field-label">Curso</span><span class="cv-field-value">${cv.curso||'—'}</span></div>
-          <div class="cv-field"><span class="cv-field-label">Conclusão</span><span class="cv-field-value">${cv.conclusao||'—'}</span></div>
-        </div>
-        ${cv.sobre ? `<div class="cv-section"><div class="cv-section-title">Sobre</div><p style="font-size:0.88rem;color:var(--muted);line-height:1.6;">${cv.sobre}</p></div>` : ''}
-        ${skills ? `<div class="cv-section"><div class="cv-section-title">Habilidades</div><div class="cv-tags">${skills}</div></div>` : ''}`;
-    }
-    abrirModal('modal-curriculo');
-  }
-
-  // ─── RENDER CURRÍCULOS RECEBIDOS ────────────────────────────────
-  function renderCurriculos() {
-    const lista = document.getElementById('lista-curriculos');
-    const cands = LS.get('ct_candidaturas', []);
-    const entrevistas = LS.get('ct_entrevistas', []);
-
-    document.getElementById('total-curric').textContent = cands.length;
-    const convidados = entrevistas.length;
-    document.getElementById('total-convidados').textContent = convidados;
-
-    if (!cands.length) {
-      lista.innerHTML = `
-        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
-          <p style="font-size:2rem;margin-bottom:0.5rem;">📥</p>
-          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum currículo recebido ainda</p>
-          <p style="color:var(--muted);font-size:0.88rem;">Os candidatos que se inscreverem nas suas vagas aparecerão aqui.</p>
-        </div>`;
-      return;
-    }
-
-    lista.innerHTML = cands.map((c, i) => {
-      const entrev = entrevistas.find(e => e.nome === c.vaga);
-      const entrevBadge = entrev ? `<div class="entrevista-badge" style="margin-top:8px;">📅 Entrevista: ${entrev.data} às ${entrev.hora} — ${entrev.formato}</div>` : '';
-      const status = entrev ? `<span class="badge badge-green">Entrevista agendada</span>` : `<span class="badge badge-yellow">Novo</span>`;
-      const btnLabel = entrev ? '✏️ Reagendar' : '📅 Agendar Entrevista';
-      const btnStyle = entrev ? 'background:rgba(34,211,165,0.15);color:var(--accent);border:1px solid rgba(34,211,165,0.3);' : '';
-      return `
-        <div class="curriculo-card" ${entrev ? 'style="border-color:rgba(34,211,165,0.4);"' : ''}>
-          <div class="curriculo-header">
-            <div>
-              <div class="curriculo-name">${c.vaga}</div>
-              <div class="curriculo-vaga">📌 Candidatou-se em ${c.data}</div>
-            </div>
-            ${status}
-          </div>
-          ${entrevBadge}
-          <div class="curriculo-footer" style="margin-top:10px;">
-            <span style="font-size:0.78rem;color:var(--muted);">Recebido em ${c.data}</span>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm" onclick="verCurriculo('${c.vaga}')">👁️ Ver Currículo</button>
-              <button class="btn btn-primary btn-sm" style="${btnStyle}" id="btn-entrev-${i}" onclick="abrirEntrevista('${c.vaga}', document.getElementById('btn-entrev-${i}'))">${btnLabel}</button>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  document.addEventListener('DOMContentLoaded', () => { verificarLogin(); renderCurriculos(); });
-  document.getElementById('new-kw').addEventListener('keydown', e => { if (e.key === 'Enter') addKeyword(); });
+document.addEventListener('DOMContentLoaded',()=>{
+  initDados();
+  const sess=LS.get('ct_session_emp');
+  if(sess) entrar(sess.nome);
+});
 </script>
 </body>
 </html>
