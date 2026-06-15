@@ -294,11 +294,8 @@
 </nav>
 
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <span class="sidebar-label">Menu</span>
-    <button class="nav-item active" onclick="showPage('login')">
-      <span class="icon">🔑</span> Login / Cadastro
-    </button>
     <button class="nav-item" onclick="showPage('publicar')">
       <span class="icon">📢</span> Publicar Vaga
     </button>
@@ -310,12 +307,15 @@
     </button>
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar">TN</div>
+        <div class="avatar" id="sidebar-avatar">?</div>
         <div>
-          <div class="user-name">Minha Empresa</div>
+          <div class="user-name" id="sidebar-nome">Não logado</div>
           <div class="user-role">Conta Empresa</div>
         </div>
       </div>
+      <button class="nav-item" style="margin-top:8px;color:var(--red);" onclick="logout()">
+        <span class="icon">🚪</span> Sair
+      </button>
     </div>
   </aside>
 
@@ -328,25 +328,30 @@
           <div class="login-logo">Conecta<span>Talentos</span></div>
           <div class="login-sub">Portal exclusivo para empresas recrutadoras 🏢</div>
 
+          <div id="login-erro" style="display:none;background:rgba(255,95,126,0.1);border:1px solid rgba(255,95,126,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:#ff5f7e;margin-bottom:1rem;"></div>
+          <div id="login-ok" style="display:none;background:rgba(34,211,165,0.1);border:1px solid rgba(34,211,165,0.3);border-radius:10px;padding:10px 14px;font-size:0.85rem;color:var(--accent);margin-bottom:1rem;"></div>
+
           <div class="tabs">
             <button class="tab active" onclick="switchTab('emp-tab','entrar')">Entrar</button>
             <button class="tab" onclick="switchTab('emp-tab','cadastrar')">Cadastrar Empresa</button>
           </div>
 
+          <!-- ENTRAR -->
           <div class="tab-content active" id="emp-tab-entrar">
-            <div class="form-group"><label>E-mail corporativo</label><input type="email" placeholder="rh@suaempresa.com"/></div>
-            <div class="form-group"><label>Senha</label><input type="password" placeholder="••••••••"/></div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('publicar')">
+            <div class="form-group"><label>E-mail corporativo</label><input type="email" id="login-email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerLogin()">
               Entrar como Empresa
             </button>
           </div>
 
+          <!-- CADASTRAR -->
           <div class="tab-content" id="emp-tab-cadastrar">
-            <div class="form-group"><label>Razão Social / Nome da Empresa</label><input type="text" placeholder="Ex: TechNova Ltda."/></div>
+            <div class="form-group"><label>Razão Social / Nome da Empresa</label><input type="text" id="cad-nome" placeholder="Ex: TechNova Ltda."/></div>
             <div class="form-row">
-              <div class="form-group"><label>CNPJ</label><input type="text" placeholder="00.000.000/0001-00"/></div>
+              <div class="form-group"><label>CNPJ</label><input type="text" id="cad-cnpj" placeholder="00.000.000/0001-00"/></div>
               <div class="form-group"><label>Setor</label>
-                <select>
+                <select id="cad-setor">
                   <option>Tecnologia</option>
                   <option>Varejo</option>
                   <option>Logística</option>
@@ -355,9 +360,10 @@
                 </select>
               </div>
             </div>
-            <div class="form-group"><label>E-mail corporativo</label><input type="email" placeholder="rh@suaempresa.com"/></div>
-            <div class="form-group"><label>Senha</label><input type="password" placeholder="Crie uma senha segura"/></div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('publicar')">
+            <div class="form-group"><label>E-mail corporativo</label><input type="email" id="cad-email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres"/></div>
+            <div class="form-group"><label>Confirmar senha</label><input type="password" id="cad-senha2" placeholder="Repita a senha"/></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="fazerCadastro()">
               Cadastrar Empresa
             </button>
           </div>
@@ -393,9 +399,9 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Localidade</label><input type="text" placeholder="Ex: São Paulo, SP"/></div>
+          <div class="form-group"><label>Localidade</label><input type="text" id="vaga-local" placeholder="Ex: São Paulo, SP"/></div>
           <div class="form-group"><label>Modalidade</label>
-            <select>
+            <select id="vaga-modalidade">
               <option>Presencial</option>
               <option>Remoto</option>
               <option>Híbrido</option>
@@ -403,11 +409,11 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Salário / Bolsa (opcional)</label><input type="text" placeholder="Ex: R$ 800,00 / mês"/></div>
-          <div class="form-group"><label>Carga Horária</label><input type="text" placeholder="Ex: 30h semanais"/></div>
+          <div class="form-group"><label>Salário / Bolsa (opcional)</label><input type="text" id="vaga-salario" placeholder="Ex: R$ 800,00 / mês"/></div>
+          <div class="form-group"><label>Carga Horária</label><input type="text" id="vaga-carga" placeholder="Ex: 30h semanais"/></div>
         </div>
         <div class="form-group"><label>Descrição da vaga</label>
-          <textarea placeholder="Descreva as atividades, requisitos e benefícios..."></textarea>
+          <textarea id="vaga-descricao" placeholder="Descreva as atividades, requisitos e benefícios..."></textarea>
         </div>
       </div>
 
@@ -527,6 +533,76 @@
 </div>
 
 <script>
+  // ─── AUTH ────────────────────────────────────────────────────────
+  function getEmpresas()  { return LS.get('ct_usuarios_emp', []); }
+  function getLogado()    { return LS.get('ct_logado_emp', null); }
+
+  function mostrarErro(msg) { const el=document.getElementById('login-erro'); el.textContent=msg; el.style.display='block'; document.getElementById('login-ok').style.display='none'; }
+  function mostrarOk(msg)   { const el=document.getElementById('login-ok');   el.textContent=msg; el.style.display='block'; document.getElementById('login-erro').style.display='none'; }
+  function limparMsg()      { document.getElementById('login-erro').style.display='none'; document.getElementById('login-ok').style.display='none'; }
+
+  function fazerCadastro() {
+    limparMsg();
+    const nome  = document.getElementById('cad-nome').value.trim();
+    const cnpj  = document.getElementById('cad-cnpj').value.trim();
+    const setor = document.getElementById('cad-setor').value;
+    const email = document.getElementById('cad-email').value.trim().toLowerCase();
+    const senha = document.getElementById('cad-senha').value;
+    const senha2= document.getElementById('cad-senha2').value;
+
+    if (!nome || !email || !senha) { mostrarErro('Preencha todos os campos obrigatórios.'); return; }
+    if (senha.length < 6)          { mostrarErro('A senha deve ter pelo menos 6 caracteres.'); return; }
+    if (senha !== senha2)          { mostrarErro('As senhas não coincidem.'); return; }
+
+    const empresas = getEmpresas();
+    if (empresas.find(e => e.email === email)) { mostrarErro('Este e-mail já está cadastrado. Faça login.'); return; }
+
+    empresas.push({ nome, cnpj, setor, email, senha });
+    LS.set('ct_usuarios_emp', empresas);
+    LS.set('ct_logado_emp', { nome, email });
+
+    mostrarOk(`Empresa cadastrada com sucesso! Bem-vindo(a), ${nome}! 🎉`);
+    setTimeout(() => entrarNoApp(nome), 1000);
+  }
+
+  function fazerLogin() {
+    limparMsg();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const senha = document.getElementById('login-senha').value;
+
+    if (!email || !senha) { mostrarErro('Preencha e-mail e senha.'); return; }
+
+    const empresas = getEmpresas();
+    const empresa = empresas.find(e => e.email === email && e.senha === senha);
+    if (!empresa) { mostrarErro('E-mail ou senha incorretos.'); return; }
+
+    LS.set('ct_logado_emp', { nome: empresa.nome, email: empresa.email });
+    entrarNoApp(empresa.nome);
+  }
+
+  function entrarNoApp(nome) {
+    const initials = nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    document.getElementById('sidebar-nome').textContent = nome;
+    document.getElementById('sidebar-avatar').textContent = initials;
+    showPage('publicar');
+  }
+
+  function logout() {
+    if (!confirm('Deseja sair da conta da empresa?')) return;
+    LS.set('ct_logado_emp', null);
+    document.getElementById('sidebar-nome').textContent = 'Não logado';
+    document.getElementById('sidebar-avatar').textContent = '?';
+    limparMsg();
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-senha').value = '';
+    showPage('login');
+  }
+
+  function verificarLogin() {
+    const logado = getLogado();
+    if (logado) entrarNoApp(logado.nome);
+  }
+
   // ─── LS HELPERS ─────────────────────────────────────────────────
   const LS = {
     get: (k, fb=null) => { try { const v=localStorage.getItem(k); return v!==null?JSON.parse(v):fb; } catch { return fb; } },
@@ -566,11 +642,37 @@
 
   // ─── PUBLICAR VAGA ──────────────────────────────────────────────
   function publicarVaga() {
-    const titulo = document.getElementById('vaga-titulo').value || 'Nova Vaga';
+    const titulo = document.getElementById('vaga-titulo').value.trim();
+    const tipo = document.getElementById('vaga-tipo').value;
+    const local = document.getElementById('vaga-local').value.trim();
+    const modalidade = document.getElementById('vaga-modalidade').value;
+    const salario = document.getElementById('vaga-salario').value.trim();
+    const carga = document.getElementById('vaga-carga').value.trim();
+    const descricao = document.getElementById('vaga-descricao').value.trim();
+    const keywords = [...document.querySelectorAll('#kw-box .badge')].map(b => b.textContent.trim());
+
+    if (!titulo) { alert('Por favor, preencha o título da vaga.'); return; }
+
+    const vagas = LS.get('ct_vagas', []);
+    vagas.unshift({
+      id: Date.now(),
+      titulo, tipo, local, modalidade, salario, carga, descricao, keywords,
+      data: new Date().toLocaleDateString('pt-BR')
+    });
+    LS.set('ct_vagas', vagas);
+
     const notif = document.getElementById('notif-vaga');
     notif.style.display = 'flex';
     notif.textContent = `✅ Vaga "${titulo}" publicada com sucesso! Já está visível para os candidatos.`;
     setTimeout(() => { notif.style.display = 'none'; }, 4000);
+
+    // Limpa o formulário
+    document.getElementById('vaga-titulo').value = '';
+    document.getElementById('vaga-local').value = '';
+    document.getElementById('vaga-salario').value = '';
+    document.getElementById('vaga-carga').value = '';
+    document.getElementById('vaga-descricao').value = '';
+    document.getElementById('kw-box').innerHTML = '';
   }
 
   // ─── BUSCAR ─────────────────────────────────────────────────────
@@ -739,7 +841,7 @@
     }).join('');
   }
 
-  document.addEventListener('DOMContentLoaded', () => { renderCurriculos(); });
+  document.addEventListener('DOMContentLoaded', () => { verificarLogin(); renderCurriculos(); });
   document.getElementById('new-kw').addEventListener('keydown', e => { if (e.key === 'Enter') addKeyword(); });
 </script>
 </body>
