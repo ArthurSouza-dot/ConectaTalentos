@@ -330,8 +330,9 @@
 <body>
 
 <nav>
-  <a class="logo" href="#">Conecta<span>Talentos</span></a>
+  <a class="logo" href="index.html">Conecta<span>Talentos</span></a>
   <div class="nav-switch">
+    <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:0.82rem;">← Início</a>
     <span>Sou uma empresa?</span>
     <a href="empresa.html">Acessar Portal Empresa →</a>
   </div>
@@ -356,7 +357,7 @@
       <div class="user-chip">
         <div class="avatar">A</div>
         <div class="user-info">
-          <div class="user-name">Arthur Silva</div>
+          <div class="user-name">Meu Perfil</div>
           <div class="user-role">Candidato</div>
         </div>
       </div>
@@ -380,11 +381,11 @@
           <div class="tab-content active" id="login-tab-entrar">
             <div class="form-group">
               <label>E-mail</label>
-              <input type="email" placeholder="seu@email.com" value="arthur@email.com"/>
+              <input type="email" placeholder="seu@email.com"/>
             </div>
             <div class="form-group">
               <label>Senha</label>
-              <input type="password" placeholder="••••••••" value="senha123"/>
+              <input type="password" placeholder="••••••••"/>
             </div>
             <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('vagas')">
               Entrar como Candidato
@@ -418,7 +419,8 @@
           </div>
 
           <div class="login-footer">
-            É uma empresa? <a href="empresa.html">Acesse o portal empresarial →</a>
+            É uma empresa? <a href="empresa.html">Acesse o portal empresarial →</a><br/>
+            <a href="index.html" style="color:var(--muted);font-size:0.8rem;">← Voltar para a página inicial</a>
           </div>
         </div>
       </div>
@@ -430,9 +432,9 @@
       <p class="subtitle">Oportunidades para quem está começando — sem exigência de experiência prévia.</p>
 
       <div class="card-grid">
-        <div class="stat-card"><span class="stat-label">Vagas abertas</span><span class="stat-value purple">48</span></div>
-        <div class="stat-card"><span class="stat-label">Para iniciantes</span><span class="stat-value green">31</span></div>
-        <div class="stat-card"><span class="stat-label">Candidaturas hoje</span><span class="stat-value yellow">5</span></div>
+        <div class="stat-card"><span class="stat-label">Vagas abertas</span><span class="stat-value purple">0</span></div>
+        <div class="stat-card"><span class="stat-label">Para iniciantes</span><span class="stat-value green">0</span></div>
+        <div class="stat-card"><span class="stat-label">Candidaturas hoje</span><span class="stat-value yellow">0</span></div>
       </div>
 
       <div class="search-bar">
@@ -448,80 +450,10 @@
         <span class="badge badge-red" style="cursor:pointer;">CLT Júnior</span>
       </div>
 
-      <div class="vaga-card">
-        <div class="vaga-header">
-          <div>
-            <div class="vaga-title">Auxiliar de TI — Suporte</div>
-            <div class="vaga-empresa">🏢 TechSolutions Ltda.</div>
-          </div>
-          <span class="badge badge-green">Estágio</span>
-        </div>
-        <div class="vaga-tags">
-          <span class="badge badge-purple">Windows</span>
-          <span class="badge badge-purple">Redes</span>
-          <span class="badge badge-yellow">Remoto/Híbrido</span>
-        </div>
-        <div class="vaga-footer">
-          <span class="vaga-local">📍 São Paulo, SP</span>
-          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Auxiliar de TI')">Candidatar-se</button>
-        </div>
-      </div>
-
-      <div class="vaga-card">
-        <div class="vaga-header">
-          <div>
-            <div class="vaga-title">Jovem Aprendiz — Administrativo</div>
-            <div class="vaga-empresa">🏢 Grupo Nexus S.A.</div>
-          </div>
-          <span class="badge badge-yellow">Jovem Aprendiz</span>
-        </div>
-        <div class="vaga-tags">
-          <span class="badge badge-purple">Excel</span>
-          <span class="badge badge-purple">Atendimento</span>
-          <span class="badge badge-green">Presencial</span>
-        </div>
-        <div class="vaga-footer">
-          <span class="vaga-local">📍 Santo André, SP</span>
-          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Jovem Aprendiz Administrativo')">Candidatar-se</button>
-        </div>
-      </div>
-
-      <div class="vaga-card">
-        <div class="vaga-header">
-          <div>
-            <div class="vaga-title">Operador de Logística</div>
-            <div class="vaga-empresa">🏢 Fast Log Brasil</div>
-          </div>
-          <span class="badge badge-red">CLT Júnior</span>
-        </div>
-        <div class="vaga-tags">
-          <span class="badge badge-purple">Organização</span>
-          <span class="badge badge-purple">Comunicação</span>
-          <span class="badge badge-yellow">Presencial</span>
-        </div>
-        <div class="vaga-footer">
-          <span class="vaga-local">📍 Guarulhos, SP</span>
-          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Operador de Logística')">Candidatar-se</button>
-        </div>
-      </div>
-
-      <div class="vaga-card">
-        <div class="vaga-header">
-          <div>
-            <div class="vaga-title">Assistente de Marketing Digital</div>
-            <div class="vaga-empresa">🏢 Criativa Agency</div>
-          </div>
-          <span class="badge badge-green">Estágio</span>
-        </div>
-        <div class="vaga-tags">
-          <span class="badge badge-purple">Instagram</span>
-          <span class="badge badge-purple">Canva</span>
-          <span class="badge badge-yellow">Remoto</span>
-        </div>
-        <div class="vaga-footer">
-          <span class="vaga-local">📍 Remoto</span>
-          <button class="btn btn-primary btn-sm" onclick="candidatar(this,'Assistente de Marketing Digital')">Candidatar-se</button>
-        </div>
+      <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+        <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
+        <p style="font-weight:600;margin-bottom:0.4rem;">Nenhuma vaga disponível ainda</p>
+        <p style="color:var(--muted);font-size:0.88rem;">As vagas publicadas pelas empresas aparecerão aqui.</p>
       </div>
 
     </div>
@@ -534,32 +466,32 @@
       <div class="card">
         <h2>👤 Dados Pessoais</h2>
         <div class="form-row">
-          <div class="form-group"><label>Nome completo</label><input type="text" value="Arthur Silva"/></div>
-          <div class="form-group"><label>Data de nascimento</label><input type="date" value="2005-03-15"/></div>
+          <div class="form-group"><label>Nome completo</label><input id="cv-nome" type="text" placeholder="Seu nome completo"/></div>
+          <div class="form-group"><label>Data de nascimento</label><input id="cv-nascimento" type="date"/></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>E-mail</label><input type="email" value="arthur@email.com"/></div>
-          <div class="form-group"><label>Telefone / WhatsApp</label><input type="tel" value="(11) 99999-1234"/></div>
+          <div class="form-group"><label>E-mail</label><input id="cv-email" type="email" placeholder="seu@email.com"/></div>
+          <div class="form-group"><label>Telefone / WhatsApp</label><input id="cv-telefone" type="tel" placeholder="(00) 00000-0000"/></div>
         </div>
-        <div class="form-group"><label>Cidade</label><input type="text" value="São Paulo, SP"/></div>
-        <div class="form-group"><label>Sobre mim</label><textarea>Estudante do ensino técnico em Informática, buscando minha primeira oportunidade na área de TI. Sou proativo, curioso e gosto de resolver problemas.</textarea></div>
+        <div class="form-group"><label>Cidade</label><input id="cv-cidade" type="text" placeholder="Ex: São Paulo, SP"/></div>
+        <div class="form-group"><label>Sobre mim</label><textarea id="cv-sobre" placeholder="Conte um pouco sobre você, seus objetivos e interesses..."></textarea></div>
       </div>
 
       <div class="card">
         <h2>🎓 Escolaridade</h2>
         <div class="form-row">
           <div class="form-group"><label>Nível</label>
-            <select>
+            <select id="cv-nivel">
               <option>Ensino Médio Completo</option>
               <option selected>Ensino Técnico em andamento</option>
               <option>Ensino Superior em andamento</option>
             </select>
           </div>
-          <div class="form-group"><label>Instituição</label><input type="text" value="ETEC Centro Paula Souza"/></div>
+          <div class="form-group"><label>Instituição</label><input id="cv-instituicao" type="text" placeholder="Nome da escola ou faculdade"/></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Curso</label><input type="text" value="Técnico em Informática"/></div>
-          <div class="form-group"><label>Ano de conclusão previsto</label><input type="text" value="2026"/></div>
+          <div class="form-group"><label>Curso</label><input id="cv-curso" type="text" placeholder="Ex: Técnico em Informática"/></div>
+          <div class="form-group"><label>Ano de conclusão previsto</label><input id="cv-conclusao" type="text" placeholder="Ex: 2026"/></div>
         </div>
       </div>
 
@@ -567,11 +499,6 @@
         <h2>🛠️ Habilidades</h2>
         <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Essas palavras-chave ajudam as empresas a encontrar você nas buscas.</p>
         <div class="tag-input" id="skills-box">
-          <span class="tag">Windows <span class="tag-x" onclick="removeTag(this)">×</span></span>
-          <span class="tag">Informática Básica <span class="tag-x" onclick="removeTag(this)">×</span></span>
-          <span class="tag">Excel <span class="tag-x" onclick="removeTag(this)">×</span></span>
-          <span class="tag">Redes <span class="tag-x" onclick="removeTag(this)">×</span></span>
-          <span class="tag">Comunicação <span class="tag-x" onclick="removeTag(this)">×</span></span>
         </div>
         <div style="display:flex;gap:8px;margin-top:10px;">
           <input type="text" id="new-skill" placeholder="Nova habilidade..." style="flex:1;"/>
@@ -581,7 +508,7 @@
 
       <div class="card">
         <h2>📚 Cursos e Certificados</h2>
-        <div class="form-group"><label>Curso</label><input type="text" value="Informática Básica — Senai (2024)"/></div>
+        <div class="form-group"><label>Curso</label><input type="text" placeholder="Ex: Informática Básica — Senai (2024)"/></div>
         <div class="form-group"><label>Curso</label><input type="text" placeholder="Ex: Excel Avançado — Coursera (2025)"/></div>
         <button class="btn btn-outline btn-sm">+ Adicionar curso</button>
       </div>
@@ -592,7 +519,7 @@
           <div class="progress-bar" style="width:240px;"><div class="progress-fill" style="width:75%;"></div></div>
         </div>
         <span style="font-size:0.82rem;color:var(--green);font-weight:600;">75%</span>
-        <button class="btn btn-primary" style="margin-left:auto;" onclick="alert('Currículo salvo com sucesso! ✅')">💾 Salvar Currículo</button>
+        <button class="btn btn-primary" style="margin-left:auto;" onclick="saveCurriculo()">💾 Salvar Currículo</button>
       </div>
     </div>
 
@@ -602,27 +529,16 @@
       <p class="subtitle">Acompanhe o status de cada vaga que você se candidatou.</p>
 
       <div class="card-grid">
-        <div class="stat-card"><span class="stat-label">Total enviadas</span><span class="stat-value purple" id="total-cand">2</span></div>
-        <div class="stat-card"><span class="stat-label">Em análise</span><span class="stat-value yellow">2</span></div>
+        <div class="stat-card"><span class="stat-label">Total enviadas</span><span class="stat-value purple" id="total-cand">0</span></div>
+        <div class="stat-card"><span class="stat-label">Em análise</span><span class="stat-value yellow">0</span></div>
         <div class="stat-card"><span class="stat-label">Respostas</span><span class="stat-value green">0</span></div>
       </div>
 
       <div id="lista-candidaturas">
-        <div class="candidatura-item">
-          <div class="candidatura-info">
-            <div class="candidatura-title">Auxiliar de TI — Suporte</div>
-            <div class="candidatura-empresa">TechSolutions Ltda.</div>
-            <div class="candidatura-date">Enviado em 08/06/2026</div>
-          </div>
-          <span class="badge badge-yellow">Em análise</span>
-        </div>
-        <div class="candidatura-item">
-          <div class="candidatura-info">
-            <div class="candidatura-title">Jovem Aprendiz — Administrativo</div>
-            <div class="candidatura-empresa">Grupo Nexus S.A.</div>
-            <div class="candidatura-date">Enviado em 07/06/2026</div>
-          </div>
-          <span class="badge badge-yellow">Em análise</span>
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">📬</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhuma candidatura ainda</p>
+          <p style="color:var(--muted);font-size:0.88rem;">Candidate-se a uma vaga e ela aparecerá aqui.</p>
         </div>
       </div>
 
@@ -636,21 +552,79 @@
 </div>
 
 <script>
+  // ─── STORAGE HELPERS ────────────────────────────────────────────
+  const LS = {
+    get: (k, fallback = null) => {
+      try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : fallback; }
+      catch { return fallback; }
+    },
+    set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  };
+
+  // ─── NAV ────────────────────────────────────────────────────────
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
-    const items = document.querySelectorAll('.nav-item');
     const map = { login: 0, vagas: 1, curriculo: 2, candidaturas: 3 };
+    const items = document.querySelectorAll('.nav-item');
     if (map[name] !== undefined) items[map[name]].classList.add('active');
+    if (name === 'candidaturas') renderCandidaturas();
   }
 
   function switchTab(group, tab) {
     document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
     document.getElementById(`${group}-${tab}`).classList.add('active');
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
+  }
+
+  // ─── CURRÍCULO — SALVAR / CARREGAR ──────────────────────────────
+  function saveCurriculo() {
+    const fields = ['nome','nascimento','email','telefone','cidade','sobre','instituicao','curso','conclusao'];
+    const data = {};
+    fields.forEach(f => {
+      const el = document.getElementById('cv-' + f);
+      if (el) data[f] = el.value;
+    });
+    const nivelEl = document.getElementById('cv-nivel');
+    if (nivelEl) data.nivel = nivelEl.value;
+
+    // habilidades
+    const tags = [...document.querySelectorAll('#skills-box .tag')].map(t => t.childNodes[0].textContent.trim());
+    data.skills = tags;
+
+    LS.set('ct_curriculo', data);
+    alert('Currículo salvo com sucesso! ✅');
+  }
+
+  function loadCurriculo() {
+    const data = LS.get('ct_curriculo');
+    if (!data) return;
+    const map = { nome: 'cv-nome', nascimento: 'cv-nascimento', email: 'cv-email',
+      telefone: 'cv-telefone', cidade: 'cv-cidade', sobre: 'cv-sobre',
+      instituicao: 'cv-instituicao', curso: 'cv-curso', conclusao: 'cv-conclusao' };
+    Object.entries(map).forEach(([key, id]) => {
+      const el = document.getElementById(id);
+      if (el && data[key]) el.value = data[key];
+    });
+    const nivelEl = document.getElementById('cv-nivel');
+    if (nivelEl && data.nivel) nivelEl.value = data.nivel;
+
+    if (data.skills && data.skills.length) {
+      const box = document.getElementById('skills-box');
+      box.innerHTML = '';
+      data.skills.forEach(s => addSkillTag(s));
+    }
+  }
+
+  // ─── HABILIDADES ────────────────────────────────────────────────
+  function addSkillTag(val) {
+    const box = document.getElementById('skills-box');
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.innerHTML = `${val} <span class="tag-x" onclick="removeTag(this)">×</span>`;
+    box.appendChild(tag);
   }
 
   function removeTag(el) {
@@ -661,34 +635,91 @@
     const input = document.getElementById('new-skill');
     const val = input.value.trim();
     if (!val) return;
-    const box = document.getElementById('skills-box');
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.innerHTML = `${val} <span class="tag-x" onclick="removeTag(this)">×</span>`;
-    box.appendChild(tag);
+    addSkillTag(val);
     input.value = '';
   }
 
-  let candCount = 2;
+  // ─── CANDIDATURAS ───────────────────────────────────────────────
+  function getCandidaturas() {
+    return LS.get('ct_candidaturas', []);
+  }
+
+  function renderCandidaturas() {
+    const lista = document.getElementById('lista-candidaturas');
+    const cands = getCandidaturas();
+    const entrevistas = LS.get('ct_entrevistas', []);
+    document.getElementById('total-cand').textContent = cands.length;
+
+    if (!cands.length) {
+      lista.innerHTML = `
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">📬</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhuma candidatura ainda</p>
+          <p style="color:var(--muted);font-size:0.88rem;">Candidate-se a uma vaga e ela aparecerá aqui.</p>
+        </div>`;
+      return;
+    }
+
+    lista.innerHTML = cands.map(c => {
+      const entrev = entrevistas.find(e => e.nome === c.vaga);
+      const statusBadge = entrev
+        ? `<span class="badge badge-green">Entrevista agendada</span>`
+        : `<span class="badge badge-yellow">Em análise</span>`;
+      const entrevInfo = entrev ? `
+        <div style="margin-top:10px;background:rgba(34,211,165,0.08);border:1px solid rgba(34,211,165,0.2);border-radius:10px;padding:10px 14px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--green);margin-bottom:4px;">📅 Entrevista Agendada</div>
+          <div style="font-size:0.88rem;"><strong>${entrev.data}</strong> às <strong>${entrev.hora}</strong></div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-top:2px;">${entrev.formato}${entrev.local ? ' — ' + entrev.local : ''}</div>
+          ${entrev.obs ? `<div style="font-size:0.82rem;color:var(--muted);margin-top:4px;">📝 ${entrev.obs}</div>` : ''}
+        </div>` : '';
+      return `
+        <div class="candidatura-item" style="flex-direction:column;align-items:flex-start;gap:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+            <div class="candidatura-info">
+              <div class="candidatura-title">${c.vaga}</div>
+              <div class="candidatura-empresa">${c.empresa}</div>
+              <div class="candidatura-date">Enviado em ${c.data}</div>
+            </div>
+            ${statusBadge}
+          </div>
+          ${entrevInfo}
+        </div>`;
+    }).join('');
+  }
+
   function candidatar(btn, vaga) {
+    const cands = getCandidaturas();
+    if (cands.find(c => c.vaga === vaga)) {
+      btn.textContent = '✅ Candidatado!';
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      return;
+    }
     btn.textContent = '✅ Candidatado!';
     btn.disabled = true;
     btn.style.opacity = '0.6';
-    candCount++;
-    document.getElementById('total-cand').textContent = candCount;
     const today = new Date().toLocaleDateString('pt-BR');
-    const lista = document.getElementById('lista-candidaturas');
-    const item = document.createElement('div');
-    item.className = 'candidatura-item';
-    item.innerHTML = `
-      <div class="candidatura-info">
-        <div class="candidatura-title">${vaga}</div>
-        <div class="candidatura-empresa">— Nova candidatura</div>
-        <div class="candidatura-date">Enviado em ${today}</div>
-      </div>
-      <span class="badge badge-yellow">Em análise</span>`;
-    lista.prepend(item);
+    cands.unshift({ vaga, empresa: '— Nova candidatura', data: today });
+    LS.set('ct_candidaturas', cands);
+    document.getElementById('total-cand').textContent = cands.length;
   }
+
+  // ─── INIT ────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    loadCurriculo();
+    renderCandidaturas();
+
+    // Marcar botões de vagas já candidatadas
+    const cands = getCandidaturas().map(c => c.vaga);
+    document.querySelectorAll('[onclick^="candidatar"]').forEach(btn => {
+      const match = btn.getAttribute('onclick').match(/candidatar\(this,'(.+)'\)/);
+      if (match && cands.includes(match[1])) {
+        btn.textContent = '✅ Candidatado!';
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+      }
+    });
+  });
 
   document.getElementById('new-skill').addEventListener('keydown', e => {
     if (e.key === 'Enter') addSkill();
