@@ -245,13 +245,49 @@
       .content { padding: 1.5rem; }
       .form-row, .form-row-3 { grid-template-columns: 1fr; }
     }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem; width: 100%; max-width: 480px;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; line-height: 1; }
+    .modal-close:hover { color: var(--text); }
+
+    /* ── CURRICULO VIEWER ── */
+    .cv-section { margin-bottom: 1.2rem; }
+    .cv-section-title { font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .cv-field { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 4px 0; border-bottom: 1px solid var(--border); }
+    .cv-field:last-child { border-bottom: none; }
+    .cv-field-label { color: var(--muted); }
+    .cv-field-value { font-weight: 500; text-align: right; max-width: 60%; }
+    .cv-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    /* ── ENTREVISTAS NA LISTA ── */
+    .entrevista-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(34,211,165,0.12); color: var(--accent);
+      border: 1px solid rgba(34,211,165,0.25);
+      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
 <nav>
-  <a class="logo" href="#">Conecta<span>Talentos</span> <span class="logo-badge">EMPRESA</span></a>
+  <a class="logo" href="index.html">Conecta<span>Talentos</span> <span class="logo-badge">EMPRESA</span></a>
   <div class="nav-switch">
+    <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:0.82rem;">← Início</a>
     <span>É candidato?</span>
     <a href="candidato.html">Acessar Portal Candidato →</a>
   </div>
@@ -276,7 +312,7 @@
       <div class="user-chip">
         <div class="avatar">TN</div>
         <div>
-          <div class="user-name">TechNova Ltda.</div>
+          <div class="user-name">Minha Empresa</div>
           <div class="user-role">Conta Empresa</div>
         </div>
       </div>
@@ -298,8 +334,8 @@
           </div>
 
           <div class="tab-content active" id="emp-tab-entrar">
-            <div class="form-group"><label>E-mail corporativo</label><input type="email" value="rh@technova.com.br"/></div>
-            <div class="form-group"><label>Senha</label><input type="password" value="senha123"/></div>
+            <div class="form-group"><label>E-mail corporativo</label><input type="email" placeholder="rh@suaempresa.com"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" placeholder="••••••••"/></div>
             <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="showPage('publicar')">
               Entrar como Empresa
             </button>
@@ -327,7 +363,8 @@
           </div>
 
           <div class="login-footer">
-            É candidato? <a href="candidato.html">Acesse o portal de candidatos →</a>
+            É candidato? <a href="candidato.html">Acesse o portal de candidatos →</a><br/>
+            <a href="index.html" style="color:var(--muted);font-size:0.8rem;">← Voltar para a página inicial</a>
           </div>
         </div>
       </div>
@@ -370,7 +407,7 @@
           <div class="form-group"><label>Carga Horária</label><input type="text" placeholder="Ex: 30h semanais"/></div>
         </div>
         <div class="form-group"><label>Descrição da vaga</label>
-          <textarea placeholder="Descreva as atividades, requisitos e benefícios...">Estamos buscando um jovem talento para integrar nossa equipe de TI. Não é necessária experiência prévia — buscamos disposição para aprender e crescer com a gente!</textarea>
+          <textarea placeholder="Descreva as atividades, requisitos e benefícios..."></textarea>
         </div>
       </div>
 
@@ -378,9 +415,6 @@
         <h2>🏷️ Palavras-chave / Habilidades Buscadas</h2>
         <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Essas palavras são usadas para encontrar candidatos compatíveis automaticamente.</p>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;" id="kw-box">
-          <span class="badge badge-green">Informática Básica</span>
-          <span class="badge badge-green">Windows</span>
-          <span class="badge badge-green">Comunicação</span>
         </div>
         <div style="display:flex;gap:8px;">
           <input type="text" id="new-kw" placeholder="Ex: Excel, Atendimento, Inglês..."/>
@@ -418,57 +452,10 @@
       </div>
 
       <div id="resultado-busca">
-        <div class="cand-card">
-          <div class="cand-avatar" style="background:linear-gradient(135deg,#6c63ff,#22d3a5);">A</div>
-          <div class="cand-info">
-            <div class="cand-name">Arthur Silva</div>
-            <div class="cand-sub">Técnico em Informática — ETEC | São Paulo, SP</div>
-            <div class="cand-tags">
-              <span class="badge badge-green">Windows</span>
-              <span class="badge badge-green">Informática Básica</span>
-              <span class="badge badge-green">Excel</span>
-              <span class="badge badge-blue">Redes</span>
-            </div>
-            <div class="cand-actions">
-              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Arthur Silva')">✉️ Convidar para Entrevista</button>
-              <button class="btn btn-outline btn-sm" onclick="showPage('curriculos')">Ver Currículo</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cand-card">
-          <div class="cand-avatar" style="background:linear-gradient(135deg,#fbbf24,#f97316);">M</div>
-          <div class="cand-info">
-            <div class="cand-name">Mariana Costa</div>
-            <div class="cand-sub">Ensino Médio Completo | Santo André, SP</div>
-            <div class="cand-tags">
-              <span class="badge badge-green">Comunicação</span>
-              <span class="badge badge-green">Atendimento</span>
-              <span class="badge badge-blue">Excel</span>
-              <span class="badge badge-yellow">Disponibilidade Imediata</span>
-            </div>
-            <div class="cand-actions">
-              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Mariana Costa')">✉️ Convidar para Entrevista</button>
-              <button class="btn btn-outline btn-sm">Ver Currículo</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cand-card">
-          <div class="cand-avatar" style="background:linear-gradient(135deg,#22d3a5,#3b82f6);">R</div>
-          <div class="cand-info">
-            <div class="cand-name">Rafael Moura</div>
-            <div class="cand-sub">Técnico em Administração — Senai | Guarulhos, SP</div>
-            <div class="cand-tags">
-              <span class="badge badge-green">Excel</span>
-              <span class="badge badge-green">Organização</span>
-              <span class="badge badge-blue">Logística</span>
-            </div>
-            <div class="cand-actions">
-              <button class="btn btn-primary btn-sm" onclick="convidar(this,'Rafael Moura')">✉️ Convidar para Entrevista</button>
-              <button class="btn btn-outline btn-sm">Ver Currículo</button>
-            </div>
-          </div>
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">🔍</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum candidato encontrado</p>
+          <p style="color:var(--muted);font-size:0.88rem;">Use os filtros acima para buscar candidatos cadastrados.</p>
         </div>
       </div>
     </div>
@@ -479,83 +466,16 @@
       <p class="subtitle">Candidatos que se inscreveram nas suas vagas.</p>
 
       <div class="card-grid">
-        <div class="stat-card"><span class="stat-label">Total recebidos</span><span class="stat-value green" id="total-curric">3</span></div>
-        <div class="stat-card"><span class="stat-label">Não avaliados</span><span class="stat-value yellow">2</span></div>
-        <div class="stat-card"><span class="stat-label">Convidados</span><span class="stat-value blue" id="total-convidados">1</span></div>
+        <div class="stat-card"><span class="stat-label">Total recebidos</span><span class="stat-value green" id="total-curric">0</span></div>
+        <div class="stat-card"><span class="stat-label">Não avaliados</span><span class="stat-value yellow">0</span></div>
+        <div class="stat-card"><span class="stat-label">Convidados</span><span class="stat-value blue" id="total-convidados">0</span></div>
       </div>
 
       <div id="lista-curriculos">
-        <div class="curriculo-card">
-          <div class="curriculo-header">
-            <div>
-              <div class="curriculo-name">Arthur Silva</div>
-              <div class="curriculo-vaga">📌 Auxiliar de TI — Suporte</div>
-            </div>
-            <span class="badge badge-yellow">Novo</span>
-          </div>
-          <div class="curriculo-body">
-            Estudante do ensino técnico em Informática pela ETEC. Possui conhecimentos em Windows, Redes e Excel. Disponibilidade imediata para estágio.
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
-            <span class="badge badge-green">Windows</span>
-            <span class="badge badge-green">Redes</span>
-            <span class="badge badge-blue">Excel</span>
-          </div>
-          <div class="curriculo-footer">
-            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 08/06/2026</span>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm">Arquivar</button>
-              <button class="btn btn-primary btn-sm" onclick="convidarLista(this)">✉️ Convidar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="curriculo-card">
-          <div class="curriculo-header">
-            <div>
-              <div class="curriculo-name">Mariana Costa</div>
-              <div class="curriculo-vaga">📌 Jovem Aprendiz — Administrativo</div>
-            </div>
-            <span class="badge badge-yellow">Novo</span>
-          </div>
-          <div class="curriculo-body">
-            Ensino médio completo. Cursou atendimento ao cliente pelo Senac. Comunicativa, pró-ativa e com boa postura profissional.
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
-            <span class="badge badge-green">Comunicação</span>
-            <span class="badge badge-green">Atendimento</span>
-          </div>
-          <div class="curriculo-footer">
-            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 07/06/2026</span>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm">Arquivar</button>
-              <button class="btn btn-primary btn-sm" onclick="convidarLista(this)">✉️ Convidar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="curriculo-card" style="border-color:rgba(34,211,165,0.4);">
-          <div class="curriculo-header">
-            <div>
-              <div class="curriculo-name">Rafael Moura</div>
-              <div class="curriculo-vaga">📌 Operador de Logística</div>
-            </div>
-            <span class="badge badge-green">Convidado</span>
-          </div>
-          <div class="curriculo-body">
-            Técnico em Administração pelo Senai. Experiência em organização de estoque em estágio escolar. Disponível para trabalho presencial.
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
-            <span class="badge badge-green">Organização</span>
-            <span class="badge badge-blue">Logística</span>
-          </div>
-          <div class="curriculo-footer">
-            <span style="font-size:0.78rem;color:var(--muted);">Recebido em 06/06/2026</span>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm">Ver detalhes</button>
-              <button class="btn btn-outline btn-sm" disabled style="opacity:0.4;">✅ Convidado</button>
-            </div>
-          </div>
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">📥</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum currículo recebido ainda</p>
+          <p style="color:var(--muted);font-size:0.88rem;">Os candidatos que se inscreverem nas suas vagas aparecerão aqui.</p>
         </div>
       </div>
     </div>
@@ -563,7 +483,57 @@
   </main>
 </div>
 
+<!-- MODAL: AGENDAR ENTREVISTA -->
+<div class="modal-overlay" id="modal-entrevista">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📅 Agendar Entrevista</div>
+      <button class="modal-close" onclick="fecharModal('modal-entrevista')">×</button>
+    </div>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.2rem;">Candidato: <strong id="modal-nome-cand" style="color:var(--text);"></strong></p>
+    <div class="form-row">
+      <div class="form-group"><label>Data da entrevista</label><input type="date" id="entrevista-data"/></div>
+      <div class="form-group"><label>Horário</label><input type="time" id="entrevista-hora"/></div>
+    </div>
+    <div class="form-group"><label>Formato</label>
+      <select id="entrevista-formato">
+        <option>Presencial</option>
+        <option>Online (Google Meet)</option>
+        <option>Online (Zoom)</option>
+        <option>Online (Teams)</option>
+        <option>Por telefone</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Local / Link</label><input type="text" id="entrevista-local" placeholder="Ex: Rua das Flores, 123 — ou cole o link da reunião"/></div>
+    <div class="form-group"><label>Observações (opcional)</label><textarea id="entrevista-obs" placeholder="Ex: Trazer RG e comprovante de escolaridade..." style="min-height:70px;"></textarea></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:0.5rem;">
+      <button class="btn btn-outline" onclick="fecharModal('modal-entrevista')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarEntrevista()">✅ Confirmar Agendamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: VER CURRÍCULO -->
+<div class="modal-overlay" id="modal-curriculo">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header">
+      <div class="modal-title">📄 Currículo do Candidato</div>
+      <button class="modal-close" onclick="fecharModal('modal-curriculo')">×</button>
+    </div>
+    <div id="modal-cv-content">
+      <div style="text-align:center;padding:2rem;color:var(--muted);">Carregando currículo...</div>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ─── LS HELPERS ─────────────────────────────────────────────────
+  const LS = {
+    get: (k, fb=null) => { try { const v=localStorage.getItem(k); return v!==null?JSON.parse(v):fb; } catch { return fb; } },
+    set: (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} }
+  };
+
+  // ─── NAV ────────────────────────────────────────────────────────
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -571,6 +541,7 @@
     const map = { login: 0, publicar: 1, buscar: 2, curriculos: 3 };
     const items = document.querySelectorAll('.nav-item');
     if (map[name] !== undefined) items[map[name]].classList.add('active');
+    if (name === 'curriculos') renderCurriculos();
   }
 
   function switchTab(group, tab) {
@@ -580,6 +551,7 @@
     event.target.classList.add('active');
   }
 
+  // ─── KEYWORDS ───────────────────────────────────────────────────
   function addKeyword() {
     const input = document.getElementById('new-kw');
     const val = input.value.trim();
@@ -592,49 +564,183 @@
     input.value = '';
   }
 
-  let vagasPublicadas = 0;
+  // ─── PUBLICAR VAGA ──────────────────────────────────────────────
   function publicarVaga() {
     const titulo = document.getElementById('vaga-titulo').value || 'Nova Vaga';
-    const tipo = document.getElementById('vaga-tipo').value;
     const notif = document.getElementById('notif-vaga');
     notif.style.display = 'flex';
     notif.textContent = `✅ Vaga "${titulo}" publicada com sucesso! Já está visível para os candidatos.`;
     setTimeout(() => { notif.style.display = 'none'; }, 4000);
-    vagasPublicadas++;
   }
 
+  // ─── BUSCAR ─────────────────────────────────────────────────────
   function buscar() {
-    const input = document.getElementById('busca-input').value;
     const box = document.getElementById('resultado-busca');
     box.style.opacity = '0.4';
     setTimeout(() => { box.style.opacity = '1'; }, 500);
   }
 
-  let convCount = 1;
-  function convidar(btn, nome) {
-    btn.textContent = '✅ Convite enviado!';
-    btn.disabled = true;
-    btn.style.opacity = '0.6';
-    convCount++;
-    document.getElementById('total-convidados').textContent = convCount;
-  }
+  // ─── MODAL HELPERS ──────────────────────────────────────────────
+  let _candAtual = null;
+  let _btnAtual = null;
 
-  function convidarLista(btn) {
-    btn.textContent = '✅ Convidado';
-    btn.disabled = true;
-    btn.style.opacity = '0.6';
-    const card = btn.closest('.curriculo-card');
-    const badge = card.querySelector('.badge');
-    badge.className = 'badge badge-green';
-    badge.textContent = 'Convidado';
-    card.style.borderColor = 'rgba(34,211,165,0.4)';
-    convCount++;
-    document.getElementById('total-convidados').textContent = convCount;
-  }
+  function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+  function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
 
-  document.getElementById('new-kw').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addKeyword();
+  // Fecha modal clicando fora
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
   });
+
+  // ─── AGENDAR ENTREVISTA ─────────────────────────────────────────
+  function abrirEntrevista(nome, card) {
+    _candAtual = nome;
+    _btnAtual = card;
+    document.getElementById('modal-nome-cand').textContent = nome;
+    document.getElementById('entrevista-data').value = '';
+    document.getElementById('entrevista-hora').value = '';
+    document.getElementById('entrevista-local').value = '';
+    document.getElementById('entrevista-obs').value = '';
+    abrirModal('modal-entrevista');
+  }
+
+  function confirmarEntrevista() {
+    const data = document.getElementById('entrevista-data').value;
+    const hora = document.getElementById('entrevista-hora').value;
+    const formato = document.getElementById('entrevista-formato').value;
+    const local = document.getElementById('entrevista-local').value;
+    const obs = document.getElementById('entrevista-obs').value;
+
+    if (!data || !hora) { alert('Por favor, preencha a data e o horário.'); return; }
+
+    const [ano, mes, dia] = data.split('-');
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+
+    // Salva no localStorage para o candidato ver
+    const entrevistas = LS.get('ct_entrevistas', []);
+    entrevistas.push({ nome: _candAtual, data: dataFormatada, hora, formato, local, obs, agendadoEm: new Date().toLocaleDateString('pt-BR') });
+    LS.set('ct_entrevistas', entrevistas);
+
+    // Atualiza o card na lista de currículos
+    if (_btnAtual) {
+      const card = _btnAtual.closest('.curriculo-card');
+      if (card) {
+        const footer = card.querySelector('.curriculo-footer');
+        const existing = card.querySelector('.entrevista-badge');
+        if (existing) existing.remove();
+        const badge = document.createElement('div');
+        badge.className = 'entrevista-badge';
+        badge.style.marginTop = '8px';
+        badge.innerHTML = `📅 Entrevista: ${dataFormatada} às ${hora} — ${formato}`;
+        footer.before(badge);
+        const btn = _btnAtual;
+        btn.textContent = '✏️ Reagendar';
+        btn.style.background = 'rgba(34,211,165,0.15)';
+        btn.style.color = 'var(--accent)';
+        btn.style.border = '1px solid rgba(34,211,165,0.3)';
+        const statusBadge = card.querySelector('.badge');
+        if (statusBadge) { statusBadge.className = 'badge badge-green'; statusBadge.textContent = 'Entrevista agendada'; }
+      }
+    }
+
+    fecharModal('modal-entrevista');
+    const notif = document.createElement('div');
+    notif.className = 'notif';
+    notif.style.marginBottom = '1rem';
+    notif.textContent = `✅ Entrevista agendada com ${_candAtual} para ${dataFormatada} às ${hora}!`;
+    document.querySelector('#page-curriculos .content-inner, #page-curriculos')?.prepend(notif);
+    setTimeout(() => notif.remove(), 4000);
+  }
+
+  // ─── VER CURRÍCULO ──────────────────────────────────────────────
+  function verCurriculo(nome) {
+    const cv = LS.get('ct_curriculo');
+    const content = document.getElementById('modal-cv-content');
+
+    if (!cv || !cv.nome) {
+      content.innerHTML = `
+        <div style="text-align:center;padding:2rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">📄</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Currículo não disponível</p>
+          <p style="color:var(--muted);font-size:0.88rem;">O candidato ainda não preencheu o currículo digital.</p>
+        </div>`;
+    } else {
+      const skills = (cv.skills || []).map(s => `<span class="badge badge-blue" style="font-size:0.75rem;">${s}</span>`).join('');
+      content.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+          <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6c63ff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">${(cv.nome||'?')[0].toUpperCase()}</div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">${cv.nome||'—'}</div>
+            <div style="font-size:0.83rem;color:var(--muted);">${cv.cidade||'—'}</div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Contato</div>
+          <div class="cv-field"><span class="cv-field-label">E-mail</span><span class="cv-field-value">${cv.email||'—'}</span></div>
+          <div class="cv-field"><span class="cv-field-label">Telefone</span><span class="cv-field-value">${cv.telefone||'—'}</span></div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Escolaridade</div>
+          <div class="cv-field"><span class="cv-field-label">Nível</span><span class="cv-field-value">${cv.nivel||'—'}</span></div>
+          <div class="cv-field"><span class="cv-field-label">Instituição</span><span class="cv-field-value">${cv.instituicao||'—'}</span></div>
+          <div class="cv-field"><span class="cv-field-label">Curso</span><span class="cv-field-value">${cv.curso||'—'}</span></div>
+          <div class="cv-field"><span class="cv-field-label">Conclusão</span><span class="cv-field-value">${cv.conclusao||'—'}</span></div>
+        </div>
+        ${cv.sobre ? `<div class="cv-section"><div class="cv-section-title">Sobre</div><p style="font-size:0.88rem;color:var(--muted);line-height:1.6;">${cv.sobre}</p></div>` : ''}
+        ${skills ? `<div class="cv-section"><div class="cv-section-title">Habilidades</div><div class="cv-tags">${skills}</div></div>` : ''}`;
+    }
+    abrirModal('modal-curriculo');
+  }
+
+  // ─── RENDER CURRÍCULOS RECEBIDOS ────────────────────────────────
+  function renderCurriculos() {
+    const lista = document.getElementById('lista-curriculos');
+    const cands = LS.get('ct_candidaturas', []);
+    const entrevistas = LS.get('ct_entrevistas', []);
+
+    document.getElementById('total-curric').textContent = cands.length;
+    const convidados = entrevistas.length;
+    document.getElementById('total-convidados').textContent = convidados;
+
+    if (!cands.length) {
+      lista.innerHTML = `
+        <div class="card" style="text-align:center;border-style:dashed;padding:2.5rem;">
+          <p style="font-size:2rem;margin-bottom:0.5rem;">📥</p>
+          <p style="font-weight:600;margin-bottom:0.4rem;">Nenhum currículo recebido ainda</p>
+          <p style="color:var(--muted);font-size:0.88rem;">Os candidatos que se inscreverem nas suas vagas aparecerão aqui.</p>
+        </div>`;
+      return;
+    }
+
+    lista.innerHTML = cands.map((c, i) => {
+      const entrev = entrevistas.find(e => e.nome === c.vaga);
+      const entrevBadge = entrev ? `<div class="entrevista-badge" style="margin-top:8px;">📅 Entrevista: ${entrev.data} às ${entrev.hora} — ${entrev.formato}</div>` : '';
+      const status = entrev ? `<span class="badge badge-green">Entrevista agendada</span>` : `<span class="badge badge-yellow">Novo</span>`;
+      const btnLabel = entrev ? '✏️ Reagendar' : '📅 Agendar Entrevista';
+      const btnStyle = entrev ? 'background:rgba(34,211,165,0.15);color:var(--accent);border:1px solid rgba(34,211,165,0.3);' : '';
+      return `
+        <div class="curriculo-card" ${entrev ? 'style="border-color:rgba(34,211,165,0.4);"' : ''}>
+          <div class="curriculo-header">
+            <div>
+              <div class="curriculo-name">${c.vaga}</div>
+              <div class="curriculo-vaga">📌 Candidatou-se em ${c.data}</div>
+            </div>
+            ${status}
+          </div>
+          ${entrevBadge}
+          <div class="curriculo-footer" style="margin-top:10px;">
+            <span style="font-size:0.78rem;color:var(--muted);">Recebido em ${c.data}</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm" onclick="verCurriculo('${c.vaga}')">👁️ Ver Currículo</button>
+              <button class="btn btn-primary btn-sm" style="${btnStyle}" id="btn-entrev-${i}" onclick="abrirEntrevista('${c.vaga}', document.getElementById('btn-entrev-${i}'))">${btnLabel}</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { renderCurriculos(); });
+  document.getElementById('new-kw').addEventListener('keydown', e => { if (e.key === 'Enter') addKeyword(); });
 </script>
 </body>
 </html>
